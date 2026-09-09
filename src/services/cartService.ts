@@ -1,0 +1,86 @@
+import { CartItem, FulfillmentMode } from '@/store/useStore';
+
+export interface BillCalculation {
+  itemTotal: number;
+  packagingFee: number;
+  deliveryFee: number;
+  tax: number;
+  discount: number;
+  grandTotal: number;
+}
+
+export class CartService {
+  public calculateBill(
+    items: CartItem[],
+    fulfillmentMode: FulfillmentMode,
+    hasGiftWrap: boolean,
+    couponDiscount: number = 0
+  ): BillCalculation {
+    const itemTotal = items.reduce(
+      (sum, item) => sum + item.variant.price * item.quantity,
+      0
+    );
+
+    const packagingFee = hasGiftWrap ? 35 : (itemTotal > 0 ? 15 : 0);
+    const deliveryFee =
+      fulfillmentMode === 'pickup' ? 0 : (itemTotal >= 1000 ? 0 : 40);
+    const tax = Math.round(itemTotal * 0.05); // 5% GST
+
+    const subtotal = itemTotal + packagingFee + deliveryFee + tax;
+    const grandTotal = Math.max(0, subtotal - couponDiscount);
+
+    return {
+      itemTotal,
+      packagingFee,
+      deliveryFee,
+      tax,
+      discount: couponDiscount,
+      grandTotal,
+    };
+  }
+
+  public validateCoupon(
+    code: string,
+    itemTotal: number
+  ): { isValid: boolean; discountAmount: number; message: string } {
+    const upper = code.trim().toUpperCase();
+
+    if (upper === 'MITHAI50' || upper === 'DIWALI50') {
+      if (itemTotal < 500) {
+        return {
+          isValid: false,
+          discountAmount: 0,
+          message: 'Coupon requires a minimum order of ₹500',
+        };
+      }
+      return {
+        isValid: true,
+        discountAmount: 50,
+        message: '₹50 festive privilege applied!',
+      };
+    }
+
+    if (upper === 'GOLD100') {
+      if (itemTotal < 1000) {
+        return {
+          isValid: false,
+          discountAmount: 0,
+          message: 'Coupon requires a minimum order of ₹1000',
+        };
+      }
+      return {
+        isValid: true,
+        discountAmount: 100,
+        message: '₹100 Connoisseur Gold Club discount applied!',
+      };
+    }
+
+    return {
+      isValid: false,
+      discountAmount: 0,
+      message: 'Invalid or expired coupon code',
+    };
+  }
+}
+
+export const cartService = new CartService();

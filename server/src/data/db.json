@@ -1,0 +1,422 @@
+{
+  "categories": [
+    "All Sweets",
+    "Pure Desi Ghee",
+    "Kaju & Dry Fruit",
+    "Bengali Specials",
+    "Khoya Delights",
+    "Sugar-Free",
+    "Savories & Namkeen"
+  ],
+  "products": [
+    {
+      "id": "kaju-katli",
+      "name": "Premium Kaju Katli",
+      "tagline": "Pure Goan Kaju & Authentic Silver Vark",
+      "description": "Melt-in-mouth diamond cut diamond mithai made from 100% premium grade Goan cashews and purified silver leaf. Zero artificial flavors.",
+      "category": "Kaju & Dry Fruit",
+      "imageUrl": "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=800&auto=format&fit=crop&q=80",
+      "rating": 4.9,
+      "reviewsCount": 1240,
+      "badge": "Bestseller",
+      "pureGhee": true,
+      "shelfLife": "15 Days at Room Temp",
+      "freshBatchMinsAgo": 15,
+      "variants": [
+        {
+          "id": "250g",
+          "label": "250g",
+          "price": 280,
+          "weightInGrams": 250
+        },
+        {
+          "id": "500g",
+          "label": "500g",
+          "price": 540,
+          "weightInGrams": 500
+        },
+        {
+          "id": "1kg",
+          "label": "1kg",
+          "price": 1050,
+          "weightInGrams": 1000
+        }
+      ]
+    },
+    {
+      "id": "motichoor-ladoo",
+      "name": "Desi Ghee Motichoor Ladoo",
+      "tagline": "Fine Boondi with Pure Desi Ghee & Saffron",
+      "description": "Traditional pearl-sized gram flour boondi simmered in fragrant saffron syrup and bound in hand-churned desi ghee with melon seeds.",
+      "category": "Pure Desi Ghee",
+      "imageUrl": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800&auto=format&fit=crop&q=80",
+      "rating": 4.95,
+      "reviewsCount": 2100,
+      "badge": "Fresh Batch Hot",
+      "pureGhee": true,
+      "shelfLife": "10 Days",
+      "freshBatchMinsAgo": 8,
+      "variants": [
+        {
+          "id": "250g",
+          "label": "250g",
+          "price": 220,
+          "weightInGrams": 250
+        },
+        {
+          "id": "500g",
+          "label": "500g",
+          "price": 420,
+          "weightInGrams": 500
+        },
+        {
+          "id": "1kg",
+          "label": "1kg",
+          "price": 800,
+          "weightInGrams": 1000
+        }
+      ]
+    },
+    {
+      "id": "sponge-rasgulla",
+      "name": "Classic Sponge Rasgulla",
+      "tagline": "Spongy Chhena in Rose-Infused Light Syrup",
+      "description": "Feather-light fresh cow milk chhena dumplings prepared daily, soaked in delicate cardamom and rose sugar elixir.",
+      "category": "Bengali Specials",
+      "imageUrl": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=800&auto=format&fit=crop&q=80",
+      "rating": 4.8,
+      "reviewsCount": 860,
+      "badge": "Daily Fresh",
+      "pureGhee": false,
+      "shelfLife": "5 Days (Keep Chilled)",
+      "freshBatchMinsAgo": 40,
+      "variants": [
+        {
+          "id": "pack-6",
+          "label": "Pack of 6",
+          "price": 180
+        },
+        {
+          "id": "pack-12",
+          "label": "Pack of 12",
+          "price": 340
+        }
+      ]
+    },
+    {
+      "id": "gulab-jamun",
+      "name": "Shahi Angoori Gulab Jamun",
+      "tagline": "Warm Khoya Jamuns Dipped in Saffron Syrup",
+      "description": "Velvety soft khoya spheres with pistachio-cardamom hearts, slow fried in pure desi ghee and steeped in saffron syrup.",
+      "category": "Khoya Delights",
+      "imageUrl": "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&auto=format&fit=crop&q=80",
+      "rating": 4.88,
+      "reviewsCount": 1490,
+      "badge": "Royal Special",
+      "pureGhee": true,
+      "shelfLife": "7 Days",
+      "freshBatchMinsAgo": 25,
+      "variants": [
+        {
+          "id": "250g",
+          "label": "250g (8 pcs)",
+          "price": 200,
+          "weightInGrams": 250
+        },
+        {
+          "id": "500g",
+          "label": "500g (16 pcs)",
+          "price": 380,
+          "weightInGrams": 500
+        },
+        {
+          "id": "1kg",
+          "label": "1kg (32 pcs)",
+          "price": 720,
+          "weightInGrams": 1000
+        }
+      ]
+    },
+    {
+      "id": "kaju-pista-roll",
+      "name": "Artisanal Kaju Pista Roll",
+      "tagline": "Goan Cashew Dough Rolled with Iranian Pistachio",
+      "description": "Double-layered luxury confection featuring smooth cashew outer shell stuffed with roasted Iranian pistachio and saffron.",
+      "category": "Kaju & Dry Fruit",
+      "imageUrl": "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80",
+      "rating": 4.92,
+      "reviewsCount": 630,
+      "badge": "Gourmet Gold",
+      "pureGhee": true,
+      "shelfLife": "20 Days",
+      "freshBatchMinsAgo": 55,
+      "variants": [
+        {
+          "id": "250g",
+          "label": "250g",
+          "price": 320,
+          "weightInGrams": 250
+        },
+        {
+          "id": "500g",
+          "label": "500g",
+          "price": 620,
+          "weightInGrams": 500
+        },
+        {
+          "id": "1kg",
+          "label": "1kg",
+          "price": 1200,
+          "weightInGrams": 1000
+        }
+      ]
+    },
+    {
+      "id": "mathura-peda",
+      "name": "Mathura Ke Shahi Peda",
+      "tagline": "Caramelized Brown Mawa with Green Cardamom",
+      "description": "Slowly roasted whole-milk mawa until golden amber, tossed with fragrant boora sugar and freshly crushed green cardamom.",
+      "category": "Khoya Delights",
+      "imageUrl": "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=800&auto=format&fit=crop&q=80",
+      "rating": 4.75,
+      "reviewsCount": 420,
+      "badge": "Heirloom",
+      "pureGhee": true,
+      "shelfLife": "15 Days",
+      "freshBatchMinsAgo": 90,
+      "variants": [
+        {
+          "id": "250g",
+          "label": "250g",
+          "price": 190,
+          "weightInGrams": 250
+        },
+        {
+          "id": "500g",
+          "label": "500g",
+          "price": 360,
+          "weightInGrams": 500
+        },
+        {
+          "id": "1kg",
+          "label": "1kg",
+          "price": 700,
+          "weightInGrams": 1000
+        }
+      ]
+    }
+  ],
+  "coupons": [
+    {
+      "code": "MITHAI50",
+      "discountAmount": 50,
+      "minOrderValue": 200,
+      "description": "₹50 flat festive celebration discount"
+    },
+    {
+      "code": "GOLD100",
+      "discountAmount": 100,
+      "minOrderValue": 500,
+      "description": "Royal Connoisseur Privilege: ₹100 off on orders above ₹500"
+    }
+  ],
+  "slots": {
+    "dates": [
+      "Today (8 Sep)",
+      "Tomorrow (9 Sep)"
+    ],
+    "timeSlots": [
+      "5:00 PM - 6:00 PM",
+      "6:00 PM - 7:00 PM",
+      "7:00 PM - 8:00 PM"
+    ]
+  },
+  "orders": [
+    {
+      "orderId": "#GBM-42161",
+      "token": "53",
+      "customerName": "Gaurav Jain",
+      "phone": "+91 98765 43210",
+      "fulfillmentMode": "delivery",
+      "slotDate": "Today (8 Sep)",
+      "slotTime": "5:00 PM - 6:00 PM",
+      "address": "A-402, Nirvana Courtyard, Sector 50, Gurugram",
+      "items": [
+        {
+          "sweetId": "kaju-katli",
+          "variantId": "500g",
+          "quantity": 1
+        },
+        {
+          "sweetId": "motichoor-ladoo",
+          "variantId": "500g",
+          "quantity": 1
+        },
+        {
+          "sweetId": "kaju-katli",
+          "variantId": "250g",
+          "quantity": 1
+        }
+      ],
+      "hasGiftWrap": true,
+      "giftMessage": "Best wishes for the festival!",
+      "itemTotal": 0,
+      "packagingFee": 35,
+      "deliveryFee": 50,
+      "tax": 0,
+      "discount": 0,
+      "grandTotal": 85,
+      "paymentMethod": "UPI",
+      "placedAt": "03:49 pm",
+      "eta": "Delivery in 25-35 mins",
+      "status": "kitchen",
+      "riderOtp": "7785"
+    },
+    {
+      "orderId": "#GBM-68595",
+      "token": "86",
+      "customerName": "Aarav Sharma",
+      "phone": "+91 99887 76655",
+      "fulfillmentMode": "delivery",
+      "slotDate": "Today (8 Sep)",
+      "slotTime": "6:00 PM - 7:00 PM",
+      "address": "B-501, Heritage Apartments, Golf Course Ext Rd",
+      "items": [
+        {
+          "price": 540,
+          "quantity": 1,
+          "name": "Premium Kaju Katli"
+        },
+        {
+          "price": 420,
+          "quantity": 1,
+          "name": "Desi Ghee Motichoor Ladoo"
+        }
+      ],
+      "hasGiftWrap": true,
+      "giftMessage": "Warm Diwali Greetings!",
+      "itemTotal": 960,
+      "packagingFee": 35,
+      "deliveryFee": 50,
+      "tax": 48,
+      "discount": 100,
+      "grandTotal": 993,
+      "paymentMethod": "UPI (Instant)",
+      "placedAt": "03:43 pm",
+      "eta": "Delivery in 25-35 mins",
+      "status": "delivered",
+      "riderOtp": "5661"
+    },
+    {
+      "orderId": "#GBM-84920",
+      "token": "42",
+      "customerName": "Gaurav Jain",
+      "phone": "+91 98765 43210",
+      "fulfillmentMode": "pickup",
+      "slotDate": "Today (8 Sep)",
+      "slotTime": "5:00 PM - 6:00 PM",
+      "address": "Boutique Store, Sector 29 Flagship, Gurugram",
+      "items": [
+        {
+          "name": "Premium Kaju Katli",
+          "variant": "500g",
+          "quantity": 1,
+          "price": 540
+        },
+        {
+          "name": "Desi Ghee Motichoor Ladoo",
+          "variant": "500g",
+          "quantity": 1,
+          "price": 420
+        }
+      ],
+      "hasGiftWrap": true,
+      "giftMessage": "Best wishes for the festive season! - The Jains",
+      "itemTotal": 960,
+      "packagingFee": 35,
+      "deliveryFee": 0,
+      "tax": 48,
+      "discount": 0,
+      "grandTotal": 1043,
+      "paymentMethod": "UPI (Google Pay)",
+      "placedAt": "5:15 PM",
+      "eta": "5:45 PM (in 15m)",
+      "status": "kitchen",
+      "riderOtp": "8492"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "kaju-katli",
+      "name": "Premium Kaju Katli",
+      "stockKg": 14.5,
+      "status": "In Stock"
+    },
+    {
+      "id": "motichoor-ladoo",
+      "name": "Desi Ghee Motichoor Ladoo",
+      "stockKg": 3,
+      "status": "Low Stock"
+    },
+    {
+      "id": "sponge-rasgulla",
+      "name": "Classic Sponge Rasgulla",
+      "stockKg": 18,
+      "status": "In Stock"
+    },
+    {
+      "id": "gulab-jamun",
+      "name": "Shahi Angoori Jamun",
+      "stockKg": 8.5,
+      "status": "In Stock"
+    },
+    {
+      "id": "kaju-pista-roll",
+      "name": "Artisanal Kaju Pista Roll",
+      "stockKg": 9.2,
+      "status": "In Stock"
+    },
+    {
+      "id": "mathura-peda",
+      "name": "Mathura Ke Shahi Peda",
+      "stockKg": 11,
+      "status": "In Stock"
+    }
+  ],
+  "users": [
+    {
+      "id": "usr-1788949611863",
+      "phone": "9876543210",
+      "name": "Gaurav Jain",
+      "points": 450,
+      "tier": "Gold Club Connoisseur",
+      "createdAt": "2026-09-09T10:26:51.863Z"
+    }
+  ],
+  "bulkOrders": [
+    {
+      "quoteId": "#GBM-BULK-46985",
+      "customerName": "Vikram Sharma",
+      "phone": "+91 98765 43210",
+      "occasion": "Wedding & Sangeet Reception",
+      "quantityKg": 50,
+      "selectedSweets": [
+        "Premium Kaju Katli",
+        "Desi Ghee Motichoor Ladoo",
+        "Shahi Angoori Jamun"
+      ],
+      "boxStyle": "Royal Velvet Box with Custom Gold Seal",
+      "customFoilText": "With Compliments from Sharma Family",
+      "targetDate": "25 Nov 2026",
+      "pricing": {
+        "retailSubtotal": 37500,
+        "wholesaleDiscount": 7500,
+        "discountPercentage": 20,
+        "estimatedTotal": 30000,
+        "depositRequired": 7500
+      },
+      "status": "quote_submitted",
+      "submittedAt": "2026-09-09T10:35:23.741Z"
+    }
+  ]
+}
