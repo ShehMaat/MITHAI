@@ -67,7 +67,19 @@ export default function CartScreen() {
     router.replace('/order-tracking');
   };
 
-  const dates = ['Today (8 Sep)', 'Tomorrow (9 Sep)'];
+  // Dynamic date generation (Defect #3 fix)
+  const getDynamicDates = () => {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return [
+      `Today (${today.getDate()} ${monthNames[today.getMonth()]})`,
+      `Tomorrow (${tomorrow.getDate()} ${monthNames[tomorrow.getMonth()]})`,
+    ];
+  };
+
+  const dates = getDynamicDates();
   const timeSlots = ['5:00 PM - 6:00 PM', '6:00 PM - 7:00 PM', '7:00 PM - 8:00 PM'];
 
   return (

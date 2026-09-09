@@ -77,6 +77,43 @@ export default function OrderTrackingScreen() {
     },
   ];
 
+  // Defect #4 fix: Render clean Empty State if no order has been placed
+  if (!activeOrder) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
+        <View style={styles.topNav}>
+          <TouchableOpacity style={styles.navBtn} activeOpacity={0.7} onPress={() => router.push('/')}>
+            <Ionicons name="arrow-back" size={20} color={Colors.light.text} />
+          </TouchableOpacity>
+          <View style={styles.navCenter}>
+            <Text style={styles.navTitle}>Order Status & Tracking</Text>
+          </View>
+          <View style={{ width: 36 }} />
+        </View>
+
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#FFF5EB', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+            <Ionicons name="receipt-outline" size={40} color={Colors.light.primary} />
+          </View>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: Colors.light.text, marginBottom: 8, textAlign: 'center' }}>
+            No Active Order Found
+          </Text>
+          <Text style={{ fontSize: 14, color: Colors.light.textSecondary, textAlign: 'center', lineHeight: 20, marginBottom: 24, maxWidth: 300 }}>
+            You haven't placed an order yet. Explore our handcrafted artisanal mithai collection and order fresh sweets today!
+          </Text>
+          <TouchableOpacity
+            style={{ backgroundColor: Colors.light.primary, paddingHorizontal: 28, paddingVertical: 14, borderRadius: 14, flexDirection: 'row', alignItems: 'center', gap: 8 }}
+            activeOpacity={0.85}
+            onPress={() => router.push('/explore' as any)}>
+            <Ionicons name="sparkles" size={16} color="#FFFFFF" />
+            <Text style={{ color: '#FFFFFF', fontSize: 15, fontWeight: '700' }}>Explore Sweets Collection</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />

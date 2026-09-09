@@ -165,7 +165,20 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const [selectedDate, setSelectedDate] = useState('Today (8 Sep)');
+  // Helper for dynamic date generation (Defect #3 fix)
+  const getDynamicDates = () => {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const todayStr = `Today (${today.getDate()} ${monthNames[today.getMonth()]})`;
+    const tomorrowStr = `Tomorrow (${tomorrow.getDate()} ${monthNames[tomorrow.getMonth()]})`;
+    return [todayStr, tomorrowStr];
+  };
+
+  const dynamicDateOptions = getDynamicDates();
+  const [selectedDate, setSelectedDate] = useState(dynamicDateOptions[0]);
   const [selectedSlot, setSelectedSlot] = useState('5:00 PM - 6:00 PM');
   const [addGiftWrap, setAddGiftWrap] = useState(true);
   const [giftMessage, setGiftMessage] = useState('Best wishes for the festival!');
