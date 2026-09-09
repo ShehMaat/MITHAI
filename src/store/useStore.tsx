@@ -33,7 +33,8 @@ export interface OrderState {
   paymentMethod: string;
   placedAt: string;
   eta: string;
-  status: 'placed' | 'kitchen' | 'packed' | 'ready' | 'cancelled';
+  status: 'placed' | 'kitchen' | 'packed' | 'ready' | 'delivered' | 'cancelled';
+  riderOtp?: string;
 }
 
 interface StoreContextType {
@@ -289,6 +290,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const placeOrder = (paymentMethod: string): OrderState => {
     const tokenNum = String(Math.floor(10 + Math.random() * 89));
+    const generatedOtp = String(Math.floor(1000 + Math.random() * 9000));
     const newOrder: OrderState = {
       orderId: `#GBM-${Math.floor(10000 + Math.random() * 90000)}`,
       token: `#TOKEN-${tokenNum}`,
@@ -307,8 +309,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       grandTotal: bill.grandTotal,
       paymentMethod,
       placedAt: '5:15 PM',
-      eta: '5:45 PM (in ~25 mins)',
+      eta: fulfillmentMode === 'pickup' ? 'Ready in 15-20 mins' : 'Delivery in 25-35 mins',
       status: 'kitchen',
+      riderOtp: generatedOtp,
     };
 
     orderService.createOrder({

@@ -155,28 +155,48 @@ export default function OrderTrackingScreen() {
           <Text style={styles.kitchenSub}>Kitchen is preparing your fresh order right now</Text>
         </View>
 
-        {/* Store Pickup Verification Card */}
-        <View style={styles.verificationCard}>
-          <View style={styles.verifyHeaderRow}>
-            <Ionicons name="shield-checkmark" size={18} color={Colors.light.saffron} />
-            <Text style={styles.verifyTitle}>Store Pickup Verification</Text>
-          </View>
-
-          <View style={styles.tokenBox}>
-            <Text style={styles.tokenLabel}>YOUR PICKUP TOKEN</Text>
-            <Text style={styles.tokenNumber}>{token}</Text>
-          </View>
-
-          {/* QR Code Graphic Mock */}
-          <View style={styles.qrContainer}>
-            <View style={styles.qrBox}>
-              <Ionicons name="qr-code" size={120} color={Colors.light.primary} />
+        {/* Store Pickup or Home Delivery Verification Card */}
+        {activeOrder?.fulfillmentMode === 'delivery' ? (
+          <View style={styles.verificationCard}>
+            <View style={styles.verifyHeaderRow}>
+              <Ionicons name="bicycle" size={18} color={Colors.light.saffron} />
+              <Text style={styles.verifyTitle}>Delivery Handover Security Code</Text>
             </View>
-            <Text style={styles.qrInstruction}>
-              Show this QR code or Token #{token.replace('#', '')} at the boutique counter for priority collection
-            </Text>
+
+            <View style={styles.tokenBox}>
+              <Text style={styles.tokenLabel}>SHARE WITH DELIVERY PARTNER</Text>
+              <Text style={styles.tokenNumber}>{activeOrder?.riderOtp || '8492'}</Text>
+            </View>
+
+            <View style={styles.qrContainer}>
+              <Text style={styles.qrInstruction}>
+                Please share this 4-digit OTP with your delivery partner only after receiving and inspecting your fresh sweets box.
+              </Text>
+            </View>
           </View>
-        </View>
+        ) : (
+          <View style={styles.verificationCard}>
+            <View style={styles.verifyHeaderRow}>
+              <Ionicons name="shield-checkmark" size={18} color={Colors.light.saffron} />
+              <Text style={styles.verifyTitle}>Store Pickup Verification</Text>
+            </View>
+
+            <View style={styles.tokenBox}>
+              <Text style={styles.tokenLabel}>YOUR PICKUP TOKEN</Text>
+              <Text style={styles.tokenNumber}>{token}</Text>
+            </View>
+
+            {/* QR Code Graphic Mock */}
+            <View style={styles.qrContainer}>
+              <View style={styles.qrBox}>
+                <Ionicons name="qr-code" size={120} color={Colors.light.primary} />
+              </View>
+              <Text style={styles.qrInstruction}>
+                Show this QR code or Token #{token.replace('#', '')} at the boutique counter for priority collection
+              </Text>
+            </View>
+          </View>
+        )}
 
         {/* Live Status Timeline Stepper */}
         <View style={styles.card}>
