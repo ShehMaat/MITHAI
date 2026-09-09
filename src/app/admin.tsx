@@ -360,6 +360,42 @@ export default function AdminScreen() {
           </View>
         </View>
 
+        {/* Corporate & Wedding Bulk Quotes Section */}
+        <Text style={styles.stockSectionTitle}>Wedding & Corporate Gifting Inquiries (2)</Text>
+        <View style={styles.stockCard}>
+          <View style={{ marginBottom: 12 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 15, fontWeight: '800', color: Colors.light.text }}>#GBM-BULK-94821</Text>
+              <View style={{ backgroundColor: '#FEF3C7', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 }}>
+                <Text style={{ fontSize: 11, fontWeight: '700', color: '#B45309' }}>Under Review</Text>
+              </View>
+            </View>
+            <Text style={{ fontSize: 13, color: Colors.light.textSecondary, marginTop: 4 }}>
+              Kapoor Family Wedding • 75 Kg Mithai Box
+            </Text>
+            <Text style={{ fontSize: 12, color: Colors.light.primary, fontWeight: '600', marginTop: 2 }}>
+              Foil: "With Best Compliments from Kapoor Family" • Est: ₹45,000
+            </Text>
+          </View>
+
+          <View style={styles.divider} />
+
+          <View style={{ marginTop: 8 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 15, fontWeight: '800', color: Colors.light.text }}>#GBM-BULK-94819</Text>
+              <View style={{ backgroundColor: '#ECFDF5', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 }}>
+                <Text style={{ fontSize: 11, fontWeight: '700', color: '#047857' }}>Deposit Paid</Text>
+              </View>
+            </View>
+            <Text style={{ fontSize: 13, color: Colors.light.textSecondary, marginTop: 4 }}>
+              TechCorp Diwali Gifting • 120 Velvet Boxes (60 Kg)
+            </Text>
+            <Text style={{ fontSize: 12, color: Colors.light.primary, fontWeight: '600', marginTop: 2 }}>
+              Target: 20 Oct 2026 • Est: ₹36,000 (Advance ₹9,000 Received)
+            </Text>
+          </View>
+        </View>
+
         {/* Customer App Switcher */}
         <TouchableOpacity
           style={styles.returnCustomerBtn}

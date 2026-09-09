@@ -83,4 +83,32 @@ router.get('/me', (req, res) => {
   });
 });
 
+// GET /api/v1/auth/addresses
+router.get('/addresses', (req, res) => {
+  const phone = (req.query.phone as string) || '9876543210';
+  const addresses = store.getUserAddresses(phone);
+  res.json({
+    success: true,
+    data: addresses,
+  });
+});
+
+// POST /api/v1/auth/addresses
+router.post('/addresses', (req, res) => {
+  const { phone, address } = req.body;
+  const userPhone = phone || '9876543210';
+  const added = store.addUserAddress(userPhone, address);
+  if (added) {
+    res.json({
+      success: true,
+      data: added,
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      error: { code: 'USER_NOT_FOUND', message: 'User not found' },
+    });
+  }
+});
+
 export default router;

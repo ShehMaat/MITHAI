@@ -175,11 +175,45 @@ class Store {
       name: user.name || 'Gaurav Jain',
       points: 450,
       tier: 'Gold Club Connoisseur',
+      addresses: [
+        {
+          id: 'addr-1',
+          type: 'Home',
+          name: user.name || 'Gaurav Jain',
+          phone: user.phone,
+          houseNo: 'A-402, Nirvana Courtyard',
+          area: 'Sector 50',
+          city: 'Gurugram',
+          state: 'Haryana',
+          pincode: '122018',
+          isDefault: true,
+        },
+      ],
       createdAt: new Date().toISOString(),
     };
     this.data.users.push(newUser);
     this.persist();
     return newUser;
+  }
+
+  public getUserAddresses(phone: string) {
+    const user = this.getUserByPhone(phone);
+    return user?.addresses || [];
+  }
+
+  public addUserAddress(phone: string, address: any) {
+    const user = this.getUserByPhone(phone);
+    if (user) {
+      if (!user.addresses) user.addresses = [];
+      const newAddr = {
+        ...address,
+        id: `addr-${Date.now()}`,
+      };
+      user.addresses.unshift(newAddr);
+      this.persist();
+      return newAddr;
+    }
+    return null;
   }
 
   public getBulkOrders() {
