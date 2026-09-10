@@ -9,6 +9,7 @@ import inventoryRouter from './routes/inventory.js';
 import riderRouter from './routes/rider.js';
 import authRouter from './routes/auth.js';
 import bulkRouter from './routes/bulk.js';
+import paymentsRouter from './routes/payments.js';
 
 dotenv.config();
 
@@ -53,6 +54,7 @@ app.use('/api/v1/slots', slotsRouter);
 app.use('/api/v1/inventory', inventoryRouter);
 app.use('/api/v1/rider', riderRouter);
 app.use('/api/v1/bulk-orders', bulkRouter);
+app.use('/api/v1/payments', paymentsRouter);
 
 // 404 Handler
 app.use((_req, res) => {
