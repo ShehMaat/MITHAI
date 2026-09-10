@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import { store } from '../data/store.js';
+import { smsService } from '../services/smsService.js';
 
 const router = Router();
 
-// Store active OTPs in memory
-const activeOtps = new Map<string, string>();
+// Store active OTPs in memory with expiration
+const activeOtps = new Map<string, { otp: string; expiresAt: number }>();
 
 // POST /api/v1/auth/send-otp
-router.post('/send-otp', (req, res) => {
+router.post('/send-otp', async (req, res) => {
   const { phone } = req.body;
   if (!phone || typeof phone !== 'string') {
     return res.status(400).json({
@@ -17,14 +18,19 @@ router.post('/send-otp', (req, res) => {
   }
 
   const cleanPhone = phone.replace(/[^0-9]/g, '');
-  const demoOtp = '4920'; // Standard demo OTP
-  activeOtps.set(cleanPhone, demoOtp);
+  // Generate random 4-digit OTP (e.g. 7492), or allow demo code 4920
+  const generatedOtp = smsService.generateOtp(4);
+  const expiresAt = Date.now() + 5 * 60 * 1000; // 5 mins
+  activeOtps.set(cleanPhone, { otp: generatedOtp, expiresAt });
+
+  const sendResult = await smsService.sendOtp(cleanPhone, generatedOtp);
 
   res.json({
     success: true,
     data: {
-      message: `OTP sent successfully to +91 ${cleanPhone}`,
-      demoOtp,
+      message: sendResult.message,
+      provider: sendResult.provider,
+      demoOtp: sendResult.demoOtp || '4920',
       expiresInSeconds: 300,
     },
   });
@@ -42,12 +48,26 @@ router.post('/verify-otp', (req, res) => {
   }
 
   const cleanPhone = phone.replace(/[^0-9]/g, '');
-  const storedOtp = activeOtps.get(cleanPhone) || '4920';
+  const otpRecord = activeOtps.get(cleanPhone);
+  const inputOtp = String(otp).trim();
 
-  if (String(otp).trim() !== storedOtp && String(otp).trim() !== '4920') {
+  // Check if expired
+  if (otpRecord && Date.now() > otpRecord.expiresAt) {
+    activeOtps.delete(cleanPhone);
     return res.status(400).json({
       success: false,
-      error: { code: 'INVALID_OTP', message: 'Invalid 4-digit OTP. Demo code is 4920' },
+      error: { code: 'OTP_EXPIRED', message: 'OTP has expired. Please request a new code.' },
+    });
+  }
+
+  const isValid =
+    (otpRecord && inputOtp === otpRecord.otp) ||
+    inputOtp === '4920'; // Always accept demo master code
+
+  if (!isValid) {
+    return res.status(400).json({
+      success: false,
+      error: { code: 'INVALID_OTP', message: 'Invalid 4-digit OTP. Please check the code sent to your phone.' },
     });
   }
 
