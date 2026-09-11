@@ -1,5 +1,5 @@
 # ==========================================
-# Gaurav Bhai Ki Mithai - Backend Dockerfile
+# Gaurav Dairy - Backend Dockerfile
 # Multi-stage production build (Node 22 Alpine)
 # ==========================================
 

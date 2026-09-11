@@ -39,7 +39,7 @@ export class SmsService {
    */
   public async sendOtp(phone: string, otp: string): Promise<SendOtpResult> {
     const cleanPhone = phone.replace(/[^0-9]/g, '');
-    const messageText = `Your Gaurav Bhai Ki Mithai verification code is ${otp}. Valid for 5 minutes. Please do not share this OTP with anyone.`;
+    const messageText = `Your Gaurav Dairy verification code is ${otp}. Valid for 5 minutes. Please do not share this OTP with anyone.`;
 
     // 1. Fast2SMS Provider (Very popular in India, simple REST API)
     const fast2smsApiKey = process.env.FAST2SMS_API_KEY;

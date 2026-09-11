@@ -1,5 +1,5 @@
 /**
- * Audio Chime Utility for Gaurav Bhai Ki Mithai
+ * Audio Chime Utility for Gaurav Dairy
  * Synthesizes a pleasant royal temple bell chime for kitchen token readiness
  * using Web Audio API without requiring external audio asset downloads.
  */

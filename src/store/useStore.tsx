@@ -349,7 +349,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         },
         delivered: {
           title: '✨ Order Delivered',
-          message: 'Thank you for choosing Gaurav Bhai Ki Mithai. Enjoy!',
+          message: 'Thank you for choosing Gaurav Dairy. Enjoy!',
           type: 'success',
         },
         cancelled: {

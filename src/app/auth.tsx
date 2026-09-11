@@ -8,6 +8,7 @@ import {
   TextInput,
   ActivityIndicator,
   ScrollView,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -116,10 +117,12 @@ export default function AuthScreen() {
         <View style={styles.responsiveContainer}>
           {/* Brand Icon Header */}
           <View style={styles.brandHeader}>
-            <View style={styles.brandIconCircle}>
-              <Ionicons name="shield-checkmark" size={28} color={Colors.light.primary} />
-            </View>
-            <Text style={styles.brandTitle}>Gaurav Bhai Ki Mithai</Text>
+            <Image
+              source={require('@/assets/images/logo.png')}
+              style={styles.brandLogo}
+              resizeMode="contain"
+            />
+            <Text style={styles.brandTitle}>Gaurav Dairy</Text>
             <Text style={styles.brandSubtitle}>
               {step === 'phone'
                 ? 'Enter your 10-digit mobile number to receive a 4-digit verification code.'
@@ -300,6 +303,11 @@ const styles = StyleSheet.create({
   brandHeader: {
     alignItems: 'center',
     marginBottom: 24,
+  },
+  brandLogo: {
+    width: 140,
+    height: 90,
+    marginBottom: 8,
   },
   brandIconCircle: {
     width: 64,

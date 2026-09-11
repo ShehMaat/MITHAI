@@ -69,7 +69,7 @@ app.use((req, _res, next) => {
 // Root & Health
 app.get('/', (_req, res) => {
   res.json({
-    app: 'Gaurav Bhai Ki Mithai Backend API',
+    app: 'Gaurav Dairy Backend API',
     status: 'ONLINE',
     version: '1.0.0',
     documentation: '/api/v1',
@@ -112,7 +112,7 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
 });
 
 server.listen(PORT, () => {
-  console.log(`✨ Gaurav Bhai Ki Mithai Backend API running at http://localhost:${PORT}`);
+  console.log(`✨ Gaurav Dairy Backend API running at http://localhost:${PORT}`);
   console.log(`📦 Health check: http://localhost:${PORT}/health`);
   console.log(`🍬 Sweets catalog: http://localhost:${PORT}/api/v1/products`);
   console.log(`🔌 Real-time Socket.io active on port ${PORT}`);

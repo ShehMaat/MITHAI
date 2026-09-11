@@ -1,4 +1,4 @@
-# Gaurav Bhai Ki Mithai — Production Operations Runbook
+# Gaurav Dairy — Production Operations Runbook
 
 > **Version:** 1.0.0  
 > **Environment:** Staging / Production  

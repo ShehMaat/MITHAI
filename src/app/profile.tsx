@@ -33,7 +33,7 @@ export default function ProfileScreen() {
   };
 
   const handleWhatsApp = () => {
-    Linking.openURL('https://wa.me/919876543210?text=Hello%20Gaurav%20Bhai%20Ki%20Mithai%2C%20I%20have%20an%20inquiry%20regarding%20fresh%20sweets.');
+    Linking.openURL('https://wa.me/919876543210?text=Hello%20Gaurav%20Dairy%2C%20I%20have%20an%20inquiry%20regarding%20fresh%20products.');
   };
 
   const handleCall = () => {

@@ -35,7 +35,7 @@ export default function TaxInvoiceModal({
   };
 
   const handleSendReceiptSms = () => {
-    const msg = `Gaurav Bhai Ki Mithai Official Tax Invoice for Order ${order.orderId}: Total Paid ₹${order.grandTotal}. Token #${order.token}. FSSAI Lic #10021064000184.`;
+    const msg = `Gaurav Dairy Official Tax Invoice for Order ${order.orderId}: Total Paid ₹${order.grandTotal}. Token #${order.token}. FSSAI Lic #10021064000184.`;
     Linking.openURL(`sms:?body=${encodeURIComponent(msg)}`);
   };
 
@@ -60,7 +60,7 @@ export default function TaxInvoiceModal({
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
             {/* Store Information & Badges */}
             <View style={styles.storeHeader}>
-              <Text style={styles.storeName}>Gaurav Bhai Ki Mithai</Text>
+              <Text style={styles.storeName}>Gaurav Dairy</Text>
               <Text style={styles.storeAddress}>
                 Shop 12, Central Market, Sector 29, Gurugram, Haryana - 122009
               </Text>

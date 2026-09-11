@@ -1,7 +1,7 @@
 import http from 'http';
 
 /**
- * 🚀 QA Test Runner for Gaurav Bhai Ki Mithai (Backend REST API)
+ * 🚀 QA Test Runner for Gaurav Dairy (Backend REST API)
  * Covers 35+ assertions across: Pricing, Security, Logic Parity, Integrations
  */
 
@@ -60,7 +60,7 @@ function assertTruthy(testName, condition) {
 }
 
 async function runTestSuite() {
-  console.log('🧪 Starting Gaurav Bhai Ki Mithai Automated QA Suite...\n');
+  console.log('🧪 Starting Gaurav Dairy Automated QA Suite...\n');
 
   try {
     // 1. Health & Core Routes

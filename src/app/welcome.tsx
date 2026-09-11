@@ -23,14 +23,19 @@ export default function WelcomeScreen() {
         contentContainerStyle={styles.scrollContent}>
         {/* Luxury Hero Banner */}
         <View style={styles.heroSection}>
+          <Image
+            source={require('@/assets/images/logo.png')}
+            style={{ width: 150, height: 95, marginBottom: 12 }}
+            resizeMode="contain"
+          />
           <View style={styles.badgeContainer}>
             <Ionicons name="sparkles" size={14} color="#F59E0B" />
-            <Text style={styles.badgeText}>ROYAL ARTISANAL MITHAI SINCE 1952</Text>
+            <Text style={styles.badgeText}>PURE DAIRY & ARTISANAL MITHAI</Text>
           </View>
 
-          <Text style={styles.heroTitle}>Gaurav Bhai Ki Mithai</Text>
+          <Text style={styles.heroTitle}>Gaurav Dairy</Text>
           <Text style={styles.heroSubtitle}>
-            Traditional Indian Sweets Crafted in Pure Bilona Desi Ghee & Saffron
+            Pure Milk, Desi Ghee & Fresh Artisanal Delicacies Crafted Daily
           </Text>
 
           <View style={styles.heroImageWrapper}>

@@ -80,7 +80,7 @@ router.post('/verify-otp', (req, res) => {
       user,
       token: `token_${user.id}_${Date.now()}`,
       role: user.role,
-      message: 'Authentication successful! Welcome to Gaurav Bhai Ki Mithai.',
+      message: 'Authentication successful! Welcome to Gaurav Dairy.',
     },
   });
 });

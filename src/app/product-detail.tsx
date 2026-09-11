@@ -37,7 +37,7 @@ export default function ProductDetailScreen() {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `Check out ${sweet.name} from Gaurav Bhai Ki Mithai! Crafted fresh daily with pure desi ghee: ₹${selectedVariant.price} for ${selectedVariant.label}.`,
+        message: `Check out ${sweet.name} from Gaurav Dairy! Crafted fresh daily with pure desi ghee: ₹${selectedVariant.price} for ${selectedVariant.label}.`,
       });
     } catch (e) {
       // ignore

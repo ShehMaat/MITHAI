@@ -45,7 +45,7 @@ export default function OrderTrackingScreen() {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `Tracking my fresh mithai order from Gaurav Bhai Ki Mithai! Order ID: ${orderId}, Pickup Token: ${token}`,
+        message: `Tracking my fresh order from Gaurav Dairy! Order ID: ${orderId}, Pickup Token: ${token}`,
       });
     } catch (e) {
       // ignore
@@ -357,7 +357,7 @@ export default function OrderTrackingScreen() {
               <Ionicons name="storefront" size={20} color={Colors.light.primary} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.storeName}>Gaurav Bhai Ki Mithai</Text>
+              <Text style={styles.storeName}>Gaurav Dairy</Text>
               <Text style={styles.storeAddress}>
                 Shop 12, Central Market, Sector 29, Gurugram, 122018
               </Text>

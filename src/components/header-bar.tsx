@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { useStore } from '@/store/useStore';
@@ -23,6 +23,47 @@ export default function HeaderBar({
 
   return (
     <View style={styles.container}>
+      {/* Brand Header Row */}
+      <View style={styles.brandRow}>
+        <View style={styles.brandLeft}>
+          <Image
+            source={require('@/assets/images/logo.png')}
+            style={styles.brandLogo}
+            resizeMode="contain"
+          />
+          <View>
+            <Text style={styles.brandTitle}>Gaurav Dairy</Text>
+            <Text style={styles.brandSubtitle}>Pure Dairy & Fresh Artisanal Sweets</Text>
+          </View>
+        </View>
+
+        <View style={styles.headerRightActions}>
+          {user ? (
+            <TouchableOpacity
+              style={styles.avatarButton}
+              activeOpacity={0.8}
+              onPress={() => router.push('/profile' as any)}>
+              <Text style={styles.avatarMiniText}>{getInitials(user.name)}</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.signInPill}
+              activeOpacity={0.8}
+              onPress={() => router.push('/welcome' as any)}>
+              <Text style={styles.signInPillText}>Sign In</Text>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity
+            style={styles.bellButton}
+            activeOpacity={0.7}
+            onPress={() => router.push('/notifications' as any)}>
+            <Ionicons name="notifications-outline" size={19} color={Colors.light.text} />
+            <View style={styles.unreadDot} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {/* Segmented Fulfillment Switcher */}
       <View style={styles.toggleWrapper}>
         <TouchableOpacity
@@ -74,7 +115,7 @@ export default function HeaderBar({
           <View style={styles.iconCircle}>
             <Ionicons name="location" size={16} color={Colors.light.saffron} />
           </View>
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={styles.locationSub}>
               {fulfillmentMode === 'delivery' ? 'Delivering to' : 'Pickup at Boutique Store'}
             </Text>
@@ -85,32 +126,6 @@ export default function HeaderBar({
               <Ionicons name="chevron-down" size={14} color={Colors.light.primary} />
             </View>
           </View>
-        </View>
-
-        <View style={styles.headerRightActions}>
-          {user ? (
-            <TouchableOpacity
-              style={styles.avatarButton}
-              activeOpacity={0.8}
-              onPress={() => router.push('/profile' as any)}>
-              <Text style={styles.avatarMiniText}>{getInitials(user.name)}</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.signInPill}
-              activeOpacity={0.8}
-              onPress={() => router.push('/welcome' as any)}>
-              <Text style={styles.signInPillText}>Sign In</Text>
-            </TouchableOpacity>
-          )}
-
-          <TouchableOpacity
-            style={styles.bellButton}
-            activeOpacity={0.7}
-            onPress={() => router.push('/notifications' as any)}>
-            <Ionicons name="notifications-outline" size={19} color={Colors.light.text} />
-            <View style={styles.unreadDot} />
-          </TouchableOpacity>
         </View>
       </View>
 
@@ -141,9 +156,36 @@ export default function HeaderBar({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingTop: 10,
     paddingBottom: 12,
     backgroundColor: Colors.light.background,
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  brandLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  brandLogo: {
+    width: 48,
+    height: 38,
+  },
+  brandTitle: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: Colors.light.text,
+    letterSpacing: 0.2,
+  },
+  brandSubtitle: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: Colors.light.textSecondary,
+    marginTop: 1,
   },
   toggleWrapper: {
     flexDirection: 'row',

@@ -53,7 +53,7 @@ export class PaymentService {
             amount: amountInPaise,
             currency: params.currency || 'INR',
             receipt: params.receipt,
-            notes: params.notes || { brand: 'Gaurav Bhai Ki Mithai' },
+            notes: params.notes || { brand: 'Gaurav Dairy' },
           }),
         });
 

@@ -123,7 +123,7 @@ export default function RiderDashboardScreen() {
   };
 
   const handleWhatsApp = (phone: string) => {
-    Linking.openURL(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=Namaste! I am on my way with your Gaurav Bhai Ki Mithai fresh sweet order.`);
+    Linking.openURL(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=Namaste! I am on my way with your Gaurav Dairy fresh order.`);
   };
 
   const handleNavigation = (address: string) => {
@@ -143,7 +143,7 @@ export default function RiderDashboardScreen() {
           </TouchableOpacity>
           <View>
             <Text style={styles.headerTitle}>Delivery Fleet Partner</Text>
-            <Text style={styles.headerSub}>Gaurav Bhai Ki Mithai Express</Text>
+            <Text style={styles.headerSub}>Gaurav Dairy Express</Text>
           </View>
         </View>
 

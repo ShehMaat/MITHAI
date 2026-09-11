@@ -70,7 +70,7 @@ export const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
             <View style={styles.headerBrandRow}>
               <Ionicons name="shield-checkmark" size={24} color="#10B981" />
               <View>
-                <Text style={styles.headerBrand}>Gaurav Sweets Secure Pay</Text>
+                <Text style={styles.headerBrand}>Gaurav Dairy Secure Pay</Text>
                 <Text style={styles.headerSub}>256-bit Encrypted Checkout</Text>
               </View>
             </View>

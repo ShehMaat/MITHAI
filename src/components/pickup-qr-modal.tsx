@@ -89,7 +89,7 @@ export default function PickupQrModal({
             <View style={styles.storeLocation}>
               <Ionicons name="location" size={18} color={Colors.light.primary} />
               <View style={{ flex: 1 }}>
-                <Text style={styles.storeName}>Gaurav Bhai Ki Mithai Boutique</Text>
+                <Text style={styles.storeName}>Gaurav Dairy Boutique</Text>
                 <Text style={styles.storeAddress}>
                   Counter 2, Central Market, Sector 29, Gurugram
                 </Text>
