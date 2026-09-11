@@ -49,4 +49,6 @@ server/.env
 
 # scratch tools
 platform-tools/
-*.png
+/phone_screen*.png
+/build_log*.txt
+
