@@ -51,4 +51,6 @@ server/.env
 platform-tools/
 /phone_screen*.png
 /build_log*.txt
+*.apk
+
 

@@ -4,12 +4,12 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   TextInput,
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { useStore } from '@/store/useStore';
@@ -18,7 +18,7 @@ import { router } from 'expo-router';
 export default function AuthScreen() {
   const { sendOtp, verifyOtp } = useStore();
 
-  const [step, setStep] = useState<'phone' | 'otp' | 'profile'>('phone');
+  const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [fullName, setFullName] = useState('');
@@ -58,7 +58,7 @@ export default function AuthScreen() {
 
   const handleVerifyOtp = async () => {
     if (otp.length < 4) {
-      setErrorMessage('Please enter the 4-digit OTP code');
+      setErrorMessage('Please enter the 4-digit verification code');
       return;
     }
 
@@ -66,7 +66,7 @@ export default function AuthScreen() {
     setErrorMessage('');
     try {
       const clean = phone.replace(/[^0-9]/g, '').slice(-10);
-      const verifiedUser = await verifyOtp(clean, otp, fullName);
+      const verifiedUser = await verifyOtp(clean, otp, fullName.trim() || undefined);
       if (verifiedUser) {
         // Automatic Role-Based Routing
         if (verifiedUser.role === 'admin') {
@@ -77,7 +77,7 @@ export default function AuthScreen() {
           router.replace('/' as any);
         }
       } else {
-        setErrorMessage('Invalid OTP code. Try demo code 4920.');
+        setErrorMessage('Invalid verification code. Try demo code 4920.');
       }
     } catch (err: any) {
       setErrorMessage(err?.message || 'Verification failed. Try demo code 4920.');
@@ -87,20 +87,21 @@ export default function AuthScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
 
       {/* Top Bar */}
       <View style={styles.topNav}>
-        <TouchableOpacity
-          style={styles.backButton}
-          activeOpacity={0.7}
-          onPress={() => {
-            if (step === 'otp') setStep('phone');
-            else router.back();
-          }}>
-          <Ionicons name="arrow-back" size={20} color={Colors.light.text} />
-        </TouchableOpacity>
+        {step === 'otp' ? (
+          <TouchableOpacity
+            style={styles.backButton}
+            activeOpacity={0.7}
+            onPress={() => setStep('phone')}>
+            <Ionicons name="arrow-back" size={20} color={Colors.light.text} />
+          </TouchableOpacity>
+        ) : (
+          <View style={{ width: 36 }} />
+        )}
 
         <Text style={styles.navTitle}>
           {step === 'phone' ? 'Sign In / Register' : 'Verify Mobile OTP'}
@@ -110,215 +111,147 @@ export default function AuthScreen() {
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled">
-        {/* Brand Icon Header */}
-        <View style={styles.brandHeader}>
-          <View style={styles.brandIconCircle}>
-            <Ionicons name="shield-checkmark" size={28} color={Colors.light.primary} />
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.responsiveContainer}>
+          {/* Brand Icon Header */}
+          <View style={styles.brandHeader}>
+            <View style={styles.brandIconCircle}>
+              <Ionicons name="shield-checkmark" size={28} color={Colors.light.primary} />
+            </View>
+            <Text style={styles.brandTitle}>Gaurav Bhai Ki Mithai</Text>
+            <Text style={styles.brandSubtitle}>
+              {step === 'phone'
+                ? 'Enter your 10-digit mobile number to receive a 4-digit verification code.'
+                : `Verification code sent to +91 ${phone.replace(/[^0-9]/g, '').slice(-10)}`}
+            </Text>
           </View>
-          <Text style={styles.brandTitle}>Gaurav Bhai Ki Mithai</Text>
-          <Text style={styles.brandSubtitle}>
-            {step === 'phone'
-              ? 'Enter your 10-digit mobile number to receive a 4-digit verification code.'
-              : `Verification code sent to +91 ${phone}`}
-          </Text>
-        </View>
 
-        {step === 'phone' ? (
-          /* Step 1: Mobile Phone Number */
-          <View style={styles.formContainer}>
-            <Text style={styles.inputLabel}>Mobile Phone Number</Text>
-            <View style={styles.phoneInputRow}>
-              <View style={styles.countryCodeBox}>
-                <Text style={styles.countryCodeText}>🇮🇳 +91</Text>
+          {step === 'phone' ? (
+            /* Step 1: Mobile Phone Number */
+            <View style={styles.formContainer}>
+              <Text style={styles.inputLabel}>Mobile Phone Number</Text>
+              <View style={styles.phoneInputRow}>
+                <View style={styles.countryCodeBox}>
+                  <Text style={styles.countryCodeText}>🇮🇳 +91</Text>
+                </View>
+                <TextInput
+                  style={styles.phoneInput}
+                  placeholder="Enter 10-digit number"
+                  placeholderTextColor={Colors.light.outline}
+                  keyboardType="number-pad"
+                  maxLength={10}
+                  value={phone}
+                  onChangeText={(val) => {
+                    setPhone(val);
+                    setErrorMessage('');
+                  }}
+                  autoFocus
+                />
               </View>
+
+              {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+
+              <TouchableOpacity
+                style={[styles.primaryBtn, (phone.replace(/[^0-9]/g, '').slice(-10).length < 10 || loading) && styles.primaryBtnDisabled]}
+                disabled={phone.replace(/[^0-9]/g, '').slice(-10).length < 10 || loading}
+                activeOpacity={0.85}
+                onPress={handleSendOtp}>
+                {loading ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <>
+                    <Text style={styles.primaryBtnText}>Get Verification Code</Text>
+                    <Ionicons name="arrow-forward" size={16} color="#FFFFFF" />
+                  </>
+                )}
+              </TouchableOpacity>
+
+              <View style={styles.privacyNote}>
+                <Ionicons name="lock-closed-outline" size={12} color={Colors.light.outline} />
+                <Text style={styles.privacyText}>
+                  Your details are 100% safe. We never spam.
+                </Text>
+              </View>
+            </View>
+          ) : (
+            /* Step 2: 4-Digit OTP Code */
+            <View style={styles.formContainer}>
+              <TouchableOpacity
+                style={styles.demoOtpNotice}
+                activeOpacity={0.7}
+                onPress={() => {
+                  setOtp('4920');
+                  setErrorMessage('');
+                }}>
+                <Ionicons name="key-outline" size={15} color={Colors.light.primary} />
+                <Text style={styles.demoOtpNoticeText}>
+                  Demo OTP Code: <Text style={{ fontWeight: '900' }}>4920</Text> (Tap to auto-fill)
+                </Text>
+              </TouchableOpacity>
+
+              <Text style={styles.inputLabel}>Enter 4-Digit Verification Code</Text>
               <TextInput
-                style={styles.phoneInput}
-                placeholder="Enter 10-digit number"
+                style={styles.otpInput}
+                placeholder="• • • •"
                 placeholderTextColor={Colors.light.outline}
                 keyboardType="number-pad"
-                maxLength={10}
-                value={phone}
+                maxLength={4}
+                value={otp}
                 onChangeText={(val) => {
-                  setPhone(val);
+                  setOtp(val);
                   setErrorMessage('');
                 }}
+                autoFocus
               />
-            </View>
 
-            {/* Quick Testing Presets */}
-            <View style={styles.rolePresetsContainer}>
-              <Text style={styles.rolePresetsLabel}>ROLE ACCESS PRESETS</Text>
-              <View style={styles.roleChipsRow}>
-                <TouchableOpacity
-                  style={[
-                    styles.roleChip,
-                    phone === '6262750616' && styles.roleChipActive,
-                  ]}
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    setPhone('6262750616');
-                    setFullName('Store Manager (Admin)');
-                    setErrorMessage('');
-                  }}>
-                  <Text style={styles.roleChipText}>👑 Admin (6262750616)</Text>
-                </TouchableOpacity>
+              <Text style={styles.inputLabel}>Your Name (Optional)</Text>
+              <TextInput
+                style={styles.nameInput}
+                placeholder="e.g. Gaurav Jain"
+                placeholderTextColor={Colors.light.outline}
+                value={fullName}
+                onChangeText={setFullName}
+              />
 
-                <TouchableOpacity
-                  style={[
-                    styles.roleChip,
-                    phone === '9993393853' && styles.roleChipActive,
-                  ]}
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    setPhone('9993393853');
-                    setFullName('Delivery Partner');
-                    setErrorMessage('');
-                  }}>
-                  <Text style={styles.roleChipText}>🛵 Rider (9993393853)</Text>
-                </TouchableOpacity>
+              {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-                <TouchableOpacity
-                  style={[
-                    styles.roleChip,
-                    phone === '9876543210' && styles.roleChipActive,
-                  ]}
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    setPhone('9876543210');
-                    setFullName('Gaurav Jain');
-                    setErrorMessage('');
-                  }}>
-                  <Text style={styles.roleChipText}>🛍️ Customer</Text>
-                </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.primaryBtn,
+                  (otp.length < 4 || loading) && styles.primaryBtnDisabled,
+                ]}
+                disabled={otp.length < 4 || loading}
+                activeOpacity={0.85}
+                onPress={handleVerifyOtp}>
+                {loading ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <>
+                    <Text style={styles.primaryBtnText}>Verify & Continue</Text>
+                    <Ionicons name="checkmark-circle" size={18} color="#FFFFFF" />
+                  </>
+                )}
+              </TouchableOpacity>
+
+              <View style={styles.resendRow}>
+                {resendTimer > 0 ? (
+                  <Text style={styles.resendTimerText}>
+                    Resend code in <Text style={{ fontWeight: '700' }}>{resendTimer}s</Text>
+                  </Text>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleSendOtp();
+                      setResendTimer(30);
+                    }}>
+                    <Text style={styles.resendLinkText}>Resend Verification Code</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
-
-            {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-
-            <TouchableOpacity
-              style={[styles.primaryBtn, loading && styles.primaryBtnDisabled]}
-              disabled={loading}
-              activeOpacity={0.85}
-              onPress={handleSendOtp}>
-              {loading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <>
-                  <Text style={styles.primaryBtnText}>Get Verification Code</Text>
-                  <Ionicons name="arrow-forward" size={16} color="#FFFFFF" />
-                </>
-              )}
-            </TouchableOpacity>
-
-            <View style={styles.privacyNote}>
-              <Ionicons name="lock-closed-outline" size={12} color={Colors.light.outline} />
-              <Text style={styles.privacyText}>
-                Your details are 100% safe. We never spam.
-              </Text>
-            </View>
-          </View>
-        ) : (
-          /* Step 2: 4-Digit OTP Code */
-          <View style={styles.formContainer}>
-            {/* Dynamic Role Destination Badge */}
-            {phone.replace(/[^0-9]/g, '').slice(-10) === '6262750616' ? (
-              <View style={[styles.roleDestinationBanner, { backgroundColor: '#FEF3C7', borderColor: '#F59E0B' }]}>
-                <Ionicons name="shield-checkmark" size={16} color="#D97706" />
-                <Text style={[styles.roleDestinationText, { color: '#92400E' }]}>
-                  ADMIN ACCOUNT • Auto-routes to Kitchen & Store Dashboard (/admin)
-                </Text>
-              </View>
-            ) : phone.replace(/[^0-9]/g, '').slice(-10) === '9993393853' ? (
-              <View style={[styles.roleDestinationBanner, { backgroundColor: '#E0F2FE', borderColor: '#38BDF8' }]}>
-                <Ionicons name="bicycle" size={16} color="#0284C7" />
-                <Text style={[styles.roleDestinationText, { color: '#0369A1' }]}>
-                  FLEET PARTNER • Auto-routes to Delivery Partner Portal (/rider)
-                </Text>
-              </View>
-            ) : (
-              <View style={[styles.roleDestinationBanner, { backgroundColor: '#ECFDF5', borderColor: '#34D399' }]}>
-                <Ionicons name="sparkles" size={16} color="#059669" />
-                <Text style={[styles.roleDestinationText, { color: '#065F46' }]}>
-                  CUSTOMER ACCOUNT • Auto-routes to Artisanal Mithai Catalog (/)
-                </Text>
-              </View>
-            )}
-
-            <TouchableOpacity
-              style={styles.demoOtpNotice}
-              activeOpacity={0.7}
-              onPress={() => {
-                setOtp('4920');
-                setErrorMessage('');
-              }}>
-              <Ionicons name="sparkles" size={16} color={Colors.light.primary} />
-              <Text style={styles.demoOtpNoticeText}>
-                Demo Master OTP: <Text style={{ fontWeight: '900' }}>4920</Text> (Tap to Auto-fill)
-              </Text>
-            </TouchableOpacity>
-
-            <Text style={styles.inputLabel}>Enter 4-Digit Verification Code</Text>
-            <TextInput
-              style={styles.otpInput}
-              placeholder="4 9 2 0"
-              placeholderTextColor={Colors.light.outline}
-              keyboardType="number-pad"
-              maxLength={4}
-              value={otp}
-              onChangeText={(val) => {
-                setOtp(val);
-                setErrorMessage('');
-              }}
-              autoFocus
-            />
-
-            <Text style={styles.inputLabel}>Your Name (Optional)</Text>
-            <TextInput
-              style={styles.nameInput}
-              placeholder="e.g. Gaurav Jain"
-              placeholderTextColor={Colors.light.outline}
-              value={fullName}
-              onChangeText={setFullName}
-            />
-
-            {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-
-            <TouchableOpacity
-              style={[
-                styles.primaryBtn,
-                (otp.length < 4 || loading) && styles.primaryBtnDisabled,
-              ]}
-              disabled={otp.length < 4 || loading}
-              activeOpacity={0.85}
-              onPress={handleVerifyOtp}>
-              {loading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <>
-                  <Text style={styles.primaryBtnText}>Verify & Continue</Text>
-                  <Ionicons name="checkmark-circle" size={18} color="#FFFFFF" />
-                </>
-              )}
-            </TouchableOpacity>
-
-            <View style={styles.resendRow}>
-              {resendTimer > 0 ? (
-                <Text style={styles.resendTimerText}>
-                  Resend code in <Text style={{ fontWeight: '700' }}>{resendTimer}s</Text>
-                </Text>
-              ) : (
-                <TouchableOpacity
-                  onPress={() => {
-                    handleSendOtp();
-                    setResendTimer(30);
-                  }}>
-                  <Text style={styles.resendLinkText}>Resend Verification Code</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        )}
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -350,16 +283,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   navTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '800',
     color: Colors.light.text,
   },
   scrollContent: {
     padding: 20,
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
+  responsiveContainer: {
+    maxWidth: 440,
+    width: '100%',
+    alignSelf: 'center',
   },
   brandHeader: {
     alignItems: 'center',
-    marginVertical: 20,
+    marginBottom: 24,
   },
   brandIconCircle: {
     width: 64,
@@ -368,7 +308,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF2EB',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginBottom: 14,
     borderWidth: 1,
     borderColor: '#FED7AA',
   },
@@ -383,15 +323,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 6,
     lineHeight: 18,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
   },
   formContainer: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: 18,
+    padding: 22,
     borderWidth: 1,
     borderColor: Colors.light.outlineVariant,
-    gap: 12,
+    gap: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
   },
   inputLabel: {
     fontSize: 12,
@@ -420,7 +365,7 @@ const styles = StyleSheet.create({
   },
   phoneInput: {
     flex: 1,
-    height: 48,
+    height: 50,
     backgroundColor: '#FAF7F2',
     borderWidth: 1,
     borderColor: Colors.light.outlineVariant,
@@ -432,16 +377,16 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   otpInput: {
-    height: 52,
+    height: 54,
     backgroundColor: '#FFF7ED',
     borderWidth: 1.5,
     borderColor: Colors.light.saffron,
     borderRadius: 12,
     paddingHorizontal: 14,
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '900',
     color: Colors.light.primary,
-    letterSpacing: 8,
+    letterSpacing: 12,
     textAlign: 'center',
   },
   nameInput: {
@@ -458,12 +403,14 @@ const styles = StyleSheet.create({
   demoOtpNotice: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 6,
     backgroundColor: '#FFF7ED',
     borderWidth: 1,
     borderColor: '#FED7AA',
     borderRadius: 10,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     marginBottom: 4,
   },
   demoOtpNoticeText: {
@@ -475,13 +422,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#DC2626',
     fontWeight: '600',
+    textAlign: 'center',
   },
   primaryBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.light.primary,
-    paddingVertical: 14,
+    paddingVertical: 15,
     borderRadius: 12,
     gap: 8,
     marginTop: 6,
@@ -491,7 +439,7 @@ const styles = StyleSheet.create({
   },
   primaryBtnText: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '800',
   },
   privacyNote: {
@@ -507,7 +455,7 @@ const styles = StyleSheet.create({
   },
   resendRow: {
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 6,
   },
   resendTimerText: {
     fontSize: 12,
@@ -517,53 +465,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '800',
     color: Colors.light.primary,
-  },
-  rolePresetsContainer: {
-    marginTop: 10,
-    marginBottom: 6,
-  },
-  rolePresetsLabel: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: Colors.light.textSecondary,
-    letterSpacing: 0.8,
-    marginBottom: 6,
-  },
-  roleChipsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  roleChip: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-    backgroundColor: '#F3EDE4',
-    borderWidth: 1,
-    borderColor: '#E7DFD4',
-  },
-  roleChipActive: {
-    backgroundColor: '#FFF0E5',
-    borderColor: Colors.light.primary,
-  },
-  roleChipText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: Colors.light.text,
-  },
-  roleDestinationBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-  },
-  roleDestinationText: {
-    flex: 1,
-    fontSize: 11,
-    fontWeight: '700',
-    lineHeight: 15,
   },
 });

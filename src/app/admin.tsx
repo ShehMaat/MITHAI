@@ -5,11 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   TextInput,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { apiClient } from '@/services/apiClient';
@@ -195,7 +195,7 @@ export default function AdminScreen() {
   });
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor="#FAF7F2" />
 
       {/* Top Operations Bar */}
@@ -572,6 +572,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FAF7F2',
   },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 40,
+    maxWidth: 640,
+    width: '100%',
+    alignSelf: 'center',
+  },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -629,9 +636,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF2EB',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  scrollContent: {
-    padding: 16,
   },
   metricsRow: {
     flexDirection: 'row',

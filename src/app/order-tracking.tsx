@@ -5,11 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   Image,
   Share,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { useStore } from '@/store/useStore';
@@ -92,7 +92,7 @@ export default function OrderTrackingScreen() {
   // Defect #4 fix: Render clean Empty State if no order has been placed
   if (!activeOrder) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
         <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
         <View style={styles.topNav}>
           <TouchableOpacity style={styles.navBtn} activeOpacity={0.7} onPress={() => router.push('/')}>
@@ -127,7 +127,7 @@ export default function OrderTrackingScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
 
       {/* Top Header Bar */}

@@ -56,6 +56,7 @@ export interface OrderState {
 
 interface StoreContextType {
   user: UserSession | null;
+  isHydrated: boolean;
   sendOtp: (phone: string) => Promise<{ message: string; demoOtp: string }>;
   verifyOtp: (phone: string, otp: string, name?: string) => Promise<UserSession | null>;
   logout: () => void;
@@ -243,6 +244,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [activeOrder, setActiveOrder] = useState<OrderState | null>(null);
   const [isMockMode, setIsMockMode] = useState<boolean>(apiClient.isMockMode());
 
+  const [isHydrated, setIsHydrated] = useState(false);
+
   // 1. Hydrate state from AsyncStorage on app launch
   useEffect(() => {
     async function hydrateStore() {
@@ -277,6 +280,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (err) {
         console.warn('[Store] Hydration notice:', err);
+      } finally {
+        setIsHydrated(true);
       }
     }
     hydrateStore();
@@ -591,6 +596,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     <StoreContext.Provider
       value={{
         user,
+        isHydrated,
         sendOtp,
         verifyOtp,
         logout,

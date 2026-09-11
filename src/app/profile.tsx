@@ -5,11 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   Linking,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { useStore } from '@/store/useStore';
@@ -41,7 +41,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
 
       {/* Top Navigation */}
@@ -412,6 +412,9 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
+    maxWidth: 600,
+    width: '100%',
+    alignSelf: 'center',
   },
   profileHeaderCard: {
     flexDirection: 'row',

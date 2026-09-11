@@ -5,10 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   TextInput,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { CATEGORIES, MOCK_SWEETS, SweetItem } from '@/constants/mockData';
@@ -52,7 +52,7 @@ export default function ExploreCatalogScreen() {
   }, [selectedCategory, searchQuery, priceFilter, sortBy]);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
 
       {/* Top Header */}

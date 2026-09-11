@@ -5,11 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   TextInput,
   Linking,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { router } from 'expo-router';
@@ -132,7 +132,7 @@ export default function RiderDashboardScreen() {
 
   if (!riderLoggedIn) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
         <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
         <View style={styles.header}>
           <TouchableOpacity
@@ -195,7 +195,7 @@ export default function RiderDashboardScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
 
       {/* Header */}
@@ -559,6 +559,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
     gap: 14,
+    maxWidth: 600,
+    width: '100%',
+    alignSelf: 'center',
   },
   metricsCard: {
     flexDirection: 'row',

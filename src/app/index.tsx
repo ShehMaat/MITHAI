@@ -5,11 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   Image,
   RefreshControl,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import HeaderBar from '@/components/header-bar';
@@ -57,7 +57,7 @@ export default function HomeScreen() {
   }, [sweets, selectedCategory, searchQuery]);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
       <View style={styles.mainContainer}>
         {/* Sticky Header */}
@@ -173,6 +173,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     position: 'relative',
+    maxWidth: 600,
+    width: '100%',
+    alignSelf: 'center',
   },
   scrollContent: {
     paddingBottom: 24,
