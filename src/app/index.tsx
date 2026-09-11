@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   StatusBar,
   Image,
+  RefreshControl,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
@@ -15,15 +16,36 @@ import HeaderBar from '@/components/header-bar';
 import FestiveHero from '@/components/festive-hero';
 import SweetCard from '@/components/sweet-card';
 import CartPill from '@/components/cart-pill';
-import { CATEGORIES, MOCK_SWEETS } from '@/constants/mockData';
+import { CATEGORIES, MOCK_SWEETS, SweetItem } from '@/constants/mockData';
+import { productService } from '@/services/productService';
 import { router } from 'expo-router';
 
 export default function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState('All Sweets');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sweets, setSweets] = useState<SweetItem[]>(MOCK_SWEETS);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const loadProducts = useCallback(async (isPullToRefresh = false) => {
+    if (isPullToRefresh) setRefreshing(true);
+    try {
+      const res = await productService.getProducts(selectedCategory);
+      if (Array.isArray(res) && res.length > 0) {
+        setSweets(res);
+      }
+    } catch (err) {
+      console.warn('[HomeScreen] Live catalog fetch notice (using cache):', err);
+    } finally {
+      if (isPullToRefresh) setRefreshing(false);
+    }
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   const filteredSweets = useMemo(() => {
-    return MOCK_SWEETS.filter((item) => {
+    return sweets.filter((item) => {
       const matchesCategory =
         selectedCategory === 'All Sweets' || item.category === selectedCategory;
       const matchesSearch =
@@ -32,7 +54,7 @@ export default function HomeScreen() {
         item.category.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [sweets, selectedCategory, searchQuery]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -43,7 +65,15 @@ export default function HomeScreen() {
 
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}>
+          contentContainerStyle={styles.scrollContent}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => loadProducts(true)}
+              tintColor={Colors.light.primary}
+              colors={[Colors.light.primary]}
+            />
+          }>
           {/* Festive Banner */}
           <FestiveHero onOrderPress={() => setSelectedCategory('All Sweets')} />
 

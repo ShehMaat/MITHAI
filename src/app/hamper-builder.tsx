@@ -46,7 +46,7 @@ const BOX_STYLES: BoxStyle[] = [
 ];
 
 export default function HamperBuilderScreen() {
-  const { addToCart } = useStore();
+  const { addHamperToCart } = useStore();
   const [selectedBox, setSelectedBox] = useState<BoxStyle>(BOX_STYLES[0]);
 
   // Selected sweets in slots: array of (SweetItem | null)
@@ -111,14 +111,14 @@ export default function HamperBuilderScreen() {
       Alert.alert('Box is Empty', 'Please select sweets to fill your festive box.');
       return;
     }
-    // Add each filled sweet to cart (250g)
-    slots.forEach((s) => {
-      if (s) {
-        const v = s.variants.find((vr) => vr.label === '250g') || s.variants[0];
-        addToCart(s, v);
-      }
+    const filledSweets = slots.filter((s): s is SweetItem => s !== null);
+    addHamperToCart({
+      box: selectedBox,
+      recipientName,
+      giftMessage: cardMessage,
+      sweets: filledSweets,
     });
-    Alert.alert('Custom Box Added!', `Your ${selectedBox.name} has been added to your sweet cart.`, [
+    Alert.alert('Custom Box Added!', `Your ${selectedBox.name} with custom monogram ribbon has been added to your sweet cart.`, [
       { text: 'View Cart', onPress: () => router.push('/cart') },
       { text: 'Continue' },
     ]);

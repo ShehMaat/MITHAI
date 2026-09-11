@@ -17,7 +17,7 @@ router.post('/send-otp', async (req, res) => {
     });
   }
 
-  const cleanPhone = phone.replace(/[^0-9]/g, '');
+  const cleanPhone = phone.replace(/[^0-9]/g, '').slice(-10);
   // Generate random 4-digit OTP (e.g. 7492), or allow demo code 4920
   const generatedOtp = smsService.generateOtp(4);
   const expiresAt = Date.now() + 5 * 60 * 1000; // 5 mins
@@ -47,7 +47,7 @@ router.post('/verify-otp', (req, res) => {
     });
   }
 
-  const cleanPhone = phone.replace(/[^0-9]/g, '');
+  const cleanPhone = phone.replace(/[^0-9]/g, '').slice(-10);
   const otpRecord = activeOtps.get(cleanPhone);
   const inputOtp = String(otp).trim();
 
@@ -79,6 +79,7 @@ router.post('/verify-otp', (req, res) => {
     data: {
       user,
       token: `token_${user.id}_${Date.now()}`,
+      role: user.role,
       message: 'Authentication successful! Welcome to Gaurav Bhai Ki Mithai.',
     },
   });
@@ -94,8 +95,15 @@ router.get('/me', (req, res) => {
     });
   }
 
-  // Return default profile
-  const user = store.getUserByPhone('9876543210') || store.upsertUser({ phone: '9876543210', name: 'Gaurav Jain' });
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const parts = token.split('_');
+  let user = null;
+  if (parts.length >= 3 && parts[1]) {
+    user = store.getUserById(parts[1]);
+  }
+  if (!user) {
+    user = store.getUserByPhone('9876543210') || store.upsertUser({ phone: '9876543210', name: 'Gaurav Jain' });
+  }
 
   res.json({
     success: true,

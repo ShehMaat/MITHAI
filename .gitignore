@@ -45,3 +45,8 @@ example
 # backend server
 server/node_modules/
 server/dist/
+server/.env
+
+# scratch tools
+platform-tools/
+*.png

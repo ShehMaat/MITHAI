@@ -17,20 +17,30 @@ import { router } from 'expo-router';
 import TaxInvoiceModal from '@/components/tax-invoice-modal';
 import { playKitchenBellChime } from '@/utils/soundEffects';
 
+import { socketService } from '@/services/socketService';
+import PickupQrModal from '@/components/pickup-qr-modal';
+
 export default function OrderTrackingScreen() {
   const { activeOrder, cancelActiveOrder } = useStore();
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
 
   useEffect(() => {
     // Play bell chime when order tracking opens
     playKitchenBellChime();
-  }, []);
+
+    // Join Socket.io room for live status updates
+    if (activeOrder?.orderId) {
+      socketService.joinOrder(activeOrder.orderId);
+    }
+  }, [activeOrder?.orderId]);
 
   const orderId = activeOrder?.orderId || '#GBM-84920';
   const token = activeOrder?.token || 'TOKEN #42';
   const eta = activeOrder?.eta || '5:45 PM (in ~25 mins)';
   const grandTotal = activeOrder?.grandTotal || 980;
   const items = activeOrder?.items || [];
+  const currentStatus = activeOrder?.status || 'kitchen';
 
   const handleShare = async () => {
     try {
@@ -46,34 +56,36 @@ export default function OrderTrackingScreen() {
     {
       id: 1,
       title: 'Order Placed & Confirmed',
-      time: '5:15 PM',
-      desc: 'Payment received successfully via UPI',
+      time: activeOrder?.placedAt || 'Just now',
+      desc: 'Payment verified successfully via UPI',
       completed: true,
-      active: false,
+      active: currentStatus === 'placed',
     },
     {
       id: 2,
       title: 'Kitchen Preparing Fresh Sweets',
-      time: 'In Progress',
+      time: currentStatus === 'kitchen' ? 'In Progress' : (['packed', 'ready', 'delivered'].includes(currentStatus) ? 'Done' : 'Pending'),
       desc: 'Karigars preparing fresh batch with pure bilona desi ghee',
-      completed: false,
-      active: true,
+      completed: ['packed', 'ready', 'delivered'].includes(currentStatus),
+      active: currentStatus === 'kitchen',
     },
     {
       id: 3,
       title: 'Packed in Festive Velvet Box & Sealed',
-      time: 'Upcoming',
+      time: currentStatus === 'packed' ? 'In Progress' : (['ready', 'delivered'].includes(currentStatus) ? 'Done' : 'Upcoming'),
       desc: 'Brass seal & personalized golden greeting card',
-      completed: false,
-      active: false,
+      completed: ['ready', 'delivered'].includes(currentStatus),
+      active: currentStatus === 'packed',
     },
     {
       id: 4,
-      title: 'Ready for Priority Pickup / Dispatch',
-      time: 'Upcoming',
-      desc: 'Counter 2 priority handover at Central Market boutique store',
-      completed: false,
-      active: false,
+      title: activeOrder?.fulfillmentMode === 'pickup' ? 'Ready for Priority Counter Handover' : 'Out for Delivery / Handed to Rider',
+      time: currentStatus === 'ready' || currentStatus === 'delivered' ? 'Ready Now' : 'Upcoming',
+      desc: activeOrder?.fulfillmentMode === 'pickup'
+        ? 'Counter 2 priority handover at Central Market boutique store'
+        : 'Rider is on the way to your delivery address',
+      completed: currentStatus === 'delivered',
+      active: currentStatus === 'ready',
     },
   ];
 
@@ -100,7 +112,7 @@ export default function OrderTrackingScreen() {
             No Active Order Found
           </Text>
           <Text style={{ fontSize: 14, color: Colors.light.textSecondary, textAlign: 'center', lineHeight: 20, marginBottom: 24, maxWidth: 300 }}>
-            You haven't placed an order yet. Explore our handcrafted artisanal mithai collection and order fresh sweets today!
+            You haven&apos;t placed an order yet. Explore our handcrafted artisanal mithai collection and order fresh sweets today!
           </Text>
           <TouchableOpacity
             style={{ backgroundColor: Colors.light.primary, paddingHorizontal: 28, paddingVertical: 14, borderRadius: 14, flexDirection: 'row', alignItems: 'center', gap: 8 }}
@@ -186,15 +198,24 @@ export default function OrderTrackingScreen() {
               <Text style={styles.tokenNumber}>{token}</Text>
             </View>
 
-            {/* QR Code Graphic Mock */}
-            <View style={styles.qrContainer}>
+            {/* QR Code Graphic Clickable */}
+            <TouchableOpacity
+              style={styles.qrContainer}
+              activeOpacity={0.8}
+              onPress={() => setShowQrModal(true)}>
               <View style={styles.qrBox}>
                 <Ionicons name="qr-code" size={120} color={Colors.light.primary} />
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 }}>
+                <Ionicons name="scan-outline" size={14} color={Colors.light.primary} />
+                <Text style={{ fontSize: 12, fontWeight: '700', color: Colors.light.primary }}>
+                  Tap to Enlarge QR Pickup Pass
+                </Text>
               </View>
               <Text style={styles.qrInstruction}>
                 Show this QR code or Token #{token.replace('#', '')} at the boutique counter for priority collection
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
         )}
 
@@ -368,6 +389,13 @@ export default function OrderTrackingScreen() {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+
+      <PickupQrModal
+        visible={showQrModal}
+        orderId={orderId}
+        token={token}
+        onClose={() => setShowQrModal(false)}
+      />
     </SafeAreaView>
   );
 }

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { store } from '../data/store.js';
+import { broadcastOrderStatus } from '../server.js';
 
 const router = Router();
 
@@ -70,15 +71,15 @@ router.post('/', (req, res) => {
     return sum + price * qty;
   }, 0);
 
-  const packagingFee = hasGiftWrap ? 35 : 0;
-  const deliveryFee = fulfillmentMode === 'pickup' ? 0 : (itemTotal >= 1000 ? 0 : 50);
+  const packagingFee = itemTotal > 0 ? (hasGiftWrap ? 35 : 15) : 0;
+  const deliveryFee = fulfillmentMode === 'pickup' || itemTotal === 0 ? 0 : (itemTotal >= 1000 ? 0 : 40);
   const tax = Math.round(itemTotal * 0.05);
 
   let discount = 0;
   if (body.couponCode) {
     const coupon = store.getCouponByCode(body.couponCode);
     if (coupon && itemTotal >= coupon.minOrderValue) {
-      discount = coupon.discountAmount;
+      discount = Math.min(coupon.discountAmount, itemTotal);
     }
   }
 
@@ -109,10 +110,12 @@ router.post('/', (req, res) => {
     placedAt: timeStr,
     eta: fulfillmentMode === 'pickup' ? 'Ready in 15-20 mins' : 'Delivery in 25-35 mins',
     status: 'kitchen',
+    paymentStatus: body.paymentStatus || 'Pending',
     riderOtp,
   };
 
   store.addOrder(newOrder);
+  broadcastOrderStatus(newOrder.orderId, newOrder.status, newOrder);
 
   res.status(201).json({
     success: true,
@@ -136,6 +139,8 @@ const handleStatusUpdate = (req: any, res: any) => {
       error: { code: 'NOT_FOUND', message: 'Order not found' },
     });
   }
+
+  broadcastOrderStatus(req.params.id, status, updated);
 
   res.json({
     success: true,

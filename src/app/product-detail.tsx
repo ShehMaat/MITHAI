@@ -214,7 +214,7 @@ export default function ProductDetailScreen() {
             <Ionicons name="chatbubble-ellipses" size={20} color="#F59E0B" />
             <View style={{ flex: 1 }}>
               <Text style={styles.quoteText}>
-                "Best Kaju Katli in Gurugram, melt in mouth texture without any excess sweetness. The silver vark is authentic and delicate."
+                &quot;Best Kaju Katli in Gurugram, melt in mouth texture without any excess sweetness. The silver vark is authentic and delicate.&quot;
               </Text>
               <Text style={styles.quoteAuthor}>Rajesh K. • Verified Buyer (5.0 ★)</Text>
             </View>

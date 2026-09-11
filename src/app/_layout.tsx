@@ -4,6 +4,7 @@ import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { StoreProvider } from '@/store/useStore';
+import NotificationToast from '@/components/notification-toast';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -13,6 +14,7 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <StoreProvider>
         <AnimatedSplashOverlay />
+        <NotificationToast />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="cart" options={{ animation: 'slide_from_bottom' }} />

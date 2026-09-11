@@ -202,10 +202,24 @@ export default function CartScreen() {
                   style={styles.itemImage}
                 />
                 <View style={styles.itemInfo}>
+                  {item.isHamper ? (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 2 }}>
+                      <Ionicons name="gift" size={12} color="#D97706" />
+                      <Text style={{ fontSize: 10, fontWeight: '800', color: '#D97706', letterSpacing: 0.5 }}>
+                        CUSTOM ROYAL HAMPER
+                      </Text>
+                    </View>
+                  ) : null}
                   <Text style={styles.itemName}>{item.sweet.name}</Text>
-                  <Text style={styles.itemVariant}>
-                    {item.variant.label} Box • Pure Desi Ghee
-                  </Text>
+                  {item.isHamper ? (
+                    <Text style={{ fontSize: 11, color: Colors.light.primary, fontWeight: '700', marginTop: 1 }}>
+                      To: {item.hamperRecipient} • {item.hamperBox?.name}
+                    </Text>
+                  ) : (
+                    <Text style={styles.itemVariant}>
+                      {item.variant.label} Box • Pure Desi Ghee
+                    </Text>
+                  )}
                   <Text style={styles.itemPrice}>
                     ₹{item.variant.price * item.quantity}
                   </Text>
@@ -350,7 +364,7 @@ export default function CartScreen() {
               <View style={{ flex: 1 }}>
                 <View style={styles.couponTagRow}>
                   <Ionicons name="checkmark-circle" size={16} color={Colors.light.pistachio} />
-                  <Text style={styles.appliedCouponText}>Code '{couponCode}' Applied!</Text>
+                  <Text style={styles.appliedCouponText}>Code &apos;{couponCode}&apos; Applied!</Text>
                 </View>
                 <Text style={styles.appliedCouponDesc}>{couponMessage}</Text>
               </View>

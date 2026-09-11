@@ -1,0 +1,143 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id           String    @id @default(uuid())
+  name         String    @unique
+  displayOrder Int       @default(0)
+  createdAt    DateTime  @default(now())
+}
+
+model Product {
+  id                String           @id
+  name              String
+  tagline           String
+  description       String
+  category          String
+  imageUrl          String
+  rating            Float            @default(4.9)
+  reviewsCount      Int              @default(100)
+  badge             String?
+  pureGhee          Boolean          @default(true)
+  shelfLife         String
+  freshBatchMinsAgo Int              @default(15)
+  isAvailable       Boolean          @default(true)
+  createdAt         DateTime         @default(now())
+  variants          ProductVariant[]
+}
+
+model ProductVariant {
+  id            String   @id
+  productId     String
+  label         String
+  price         Int
+  weightInGrams Int?
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        String    @id @default(uuid())
+  phone     String    @unique
+  name      String
+  points    Int       @default(100)
+  tier      String    @default("Silver Patron")
+  createdAt DateTime  @default(now())
+  addresses Address[]
+}
+
+model Address {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   @default("Home")
+  name      String
+  phone     String
+  houseNo   String
+  area      String
+  city      String
+  state     String
+  pincode   String
+  isDefault Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  orderId         String      @unique
+  token           String
+  customerName    String
+  phone           String
+  fulfillmentMode String      @default("delivery")
+  slotDate        String
+  slotTime        String
+  address         String
+  hasGiftWrap     Boolean     @default(false)
+  giftMessage     String?
+  itemTotal       Int
+  packagingFee    Int
+  deliveryFee     Int
+  tax             Int
+  discount        Int         @default(0)
+  grandTotal      Int
+  paymentMethod   String      @default("UPI (Instant)")
+  placedAt        String
+  eta             String
+  status          String      @default("kitchen")
+  riderOtp        String?
+  createdAt       DateTime    @default(now())
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id           String  @id @default(uuid())
+  orderId      String
+  sweetName    String
+  variantLabel String
+  price        Int
+  quantity     Int
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id          String   @id @default(uuid())
+  orderId     String
+  paymentId   String
+  signature   String?
+  amount      Int
+  status      String   @default("completed")
+  createdAt   DateTime @default(now())
+}
+
+model Coupon {
+  id             String   @id @default(uuid())
+  code           String   @unique
+  discountAmount Int
+  minOrderValue  Int
+  description    String
+  isActive       Boolean  @default(true)
+}
+
+model BulkOrder {
+  id                 String   @id @default(uuid())
+  quoteId            String   @unique
+  occasion           String
+  quantityKg         Int
+  sweets             String
+  boxStyle           String
+  customFoilText     String?
+  targetDate         String
+  customerName       String
+  phone              String
+  retailSubtotal     Int
+  wholesaleDiscount  Int
+  discountPercentage Int
+  estimatedTotal     Int
+  depositRequired    Int
+  status             String   @default("submitted")
+  createdAt          DateTime @default(now())
+}

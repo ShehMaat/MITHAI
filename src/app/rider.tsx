@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,12 @@ import {
   StatusBar,
   TextInput,
   Linking,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useStore } from '@/store/useStore';
 
 interface RiderOrder {
   id: string;
@@ -65,12 +66,40 @@ const INITIAL_RIDER_ORDERS: RiderOrder[] = [
 ];
 
 export default function RiderDashboardScreen() {
+  const { user } = useStore();
+  const [riderLoggedIn, setRiderLoggedIn] = useState(false);
+  const [riderPhone, setRiderPhone] = useState(user?.role === 'rider' ? user.phone : '9993393853');
+  const [phoneError, setPhoneError] = useState('');
   const [isOnDuty, setIsOnDuty] = useState(true);
   const [activeTab, setActiveTab] = useState<'active' | 'history'>('active');
   const [orders, setOrders] = useState<RiderOrder[]>(INITIAL_RIDER_ORDERS);
   const [enteredOtp, setEnteredOtp] = useState('');
   const [otpError, setOtpError] = useState('');
   const [completedOrderSuccess, setCompletedOrderSuccess] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem('GBM_RIDER_AUTH').then((val) => {
+      if (val === 'true' || user?.role === 'rider') {
+        setRiderLoggedIn(true);
+      }
+    });
+  }, [user]);
+
+  const handleRiderLogin = () => {
+    const clean = riderPhone.replace(/[^0-9]/g, '').slice(-10);
+    if (clean === '9993393853') {
+      AsyncStorage.setItem('GBM_RIDER_AUTH', 'true').catch(() => {});
+      setRiderLoggedIn(true);
+      setPhoneError('');
+    } else {
+      setPhoneError('Access Restricted: Only registered fleet numbers (9993393853) can activate delivery shifts.');
+    }
+  };
+
+  const handleRiderLogout = () => {
+    AsyncStorage.removeItem('GBM_RIDER_AUTH').catch(() => {});
+    setRiderLoggedIn(false);
+  };
 
   const activeOrders = orders.filter((o) => o.status !== 'delivered');
   const completedOrders = orders.filter((o) => o.status === 'delivered');
@@ -101,6 +130,70 @@ export default function RiderDashboardScreen() {
     Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`);
   };
 
+  if (!riderLoggedIn) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            activeOpacity={0.7}
+            onPress={() => router.replace('/')}>
+            <Ionicons name="arrow-back" size={20} color={Colors.light.text} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.headerTitle}>Delivery Fleet Partner</Text>
+            <Text style={styles.headerSub}>Gaurav Bhai Ki Mithai Express</Text>
+          </View>
+        </View>
+
+        <View style={{ flex: 1, padding: 24, justifyContent: 'center', maxWidth: 360, alignSelf: 'center', width: '100%' }}>
+          <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: '#FFF0E0', alignItems: 'center', justifyContent: 'center', marginBottom: 16, alignSelf: 'center' }}>
+            <Ionicons name="bicycle" size={36} color={Colors.light.primary} />
+          </View>
+
+          <Text style={{ fontSize: 22, fontWeight: '800', color: Colors.light.text, textAlign: 'center', marginBottom: 6 }}>
+            Rider Shift Login
+          </Text>
+          <Text style={{ fontSize: 13, color: Colors.light.textSecondary, textAlign: 'center', marginBottom: 24, lineHeight: 18 }}>
+            Enter your registered 10-digit delivery partner mobile number to access assigned orders
+          </Text>
+
+          <View style={{ backgroundColor: '#FFFFFF', borderRadius: 14, borderWidth: 1, borderColor: '#EFE7DE', paddingHorizontal: 16, paddingVertical: 12, marginBottom: 12 }}>
+            <Text style={{ fontSize: 11, fontWeight: '700', color: Colors.light.textSecondary, marginBottom: 4 }}>REGISTERED MOBILE</Text>
+            <TextInput
+              style={{ fontSize: 16, fontWeight: '700', color: Colors.light.text }}
+              value={riderPhone}
+              onChangeText={setRiderPhone}
+              keyboardType="phone-pad"
+              maxLength={10}
+              placeholder="9876543210"
+            />
+          </View>
+
+          {phoneError ? (
+            <Text style={{ fontSize: 12, color: '#DC2626', fontWeight: '600', marginBottom: 12, textAlign: 'center' }}>
+              {phoneError}
+            </Text>
+          ) : null}
+
+          <TouchableOpacity
+            style={{ backgroundColor: Colors.light.primary, height: 50, borderRadius: 14, alignItems: 'center', justifyContent: 'center', marginTop: 8 }}
+            activeOpacity={0.85}
+            onPress={handleRiderLogin}>
+            <Text style={{ color: '#FFFFFF', fontSize: 15, fontWeight: '700' }}>Activate Delivery Shift</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{ marginTop: 16, alignItems: 'center' }}
+            onPress={() => router.replace('/')}>
+            <Text style={{ color: Colors.light.textSecondary, fontSize: 13, fontWeight: '600' }}>Return to Customer App</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.light.background} />
@@ -119,16 +212,25 @@ export default function RiderDashboardScreen() {
           <Text style={styles.headerSub}>Rider ID: #R-204 • Ramesh Verma</Text>
         </View>
 
-        {/* Duty Status Switcher */}
-        <TouchableOpacity
-          style={[styles.dutyPill, isOnDuty ? styles.dutyPillOn : styles.dutyPillOff]}
-          activeOpacity={0.8}
-          onPress={() => setIsOnDuty(!isOnDuty)}>
-          <View style={[styles.dutyDot, isOnDuty ? styles.dutyDotOn : styles.dutyDotOff]} />
-          <Text style={[styles.dutyText, isOnDuty ? styles.dutyTextOn : styles.dutyTextOff]}>
-            {isOnDuty ? 'ON DUTY' : 'BREAK'}
-          </Text>
-        </TouchableOpacity>
+        {/* Duty Status Switcher & Logout */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <TouchableOpacity
+            style={[styles.dutyPill, isOnDuty ? styles.dutyPillOn : styles.dutyPillOff]}
+            activeOpacity={0.8}
+            onPress={() => setIsOnDuty(!isOnDuty)}>
+            <View style={[styles.dutyDot, isOnDuty ? styles.dutyDotOn : styles.dutyDotOff]} />
+            <Text style={[styles.dutyText, isOnDuty ? styles.dutyTextOn : styles.dutyTextOff]}>
+              {isOnDuty ? 'ON DUTY' : 'BREAK'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#EFE7DE' }}
+            activeOpacity={0.7}
+            onPress={handleRiderLogout}>
+            <Ionicons name="log-out-outline" size={16} color="#DC2626" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView
@@ -137,7 +239,7 @@ export default function RiderDashboardScreen() {
         {/* Today's Shift Metrics Banner */}
         <View style={styles.metricsCard}>
           <View style={styles.metricItem}>
-            <Text style={styles.metricLabel}>Today's Earnings</Text>
+            <Text style={styles.metricLabel}>Today&apos;s Earnings</Text>
             <Text style={styles.metricValue}>₹840</Text>
             <Text style={styles.metricSub}>+ ₹150 festive bonus</Text>
           </View>

@@ -291,27 +291,54 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Operations Hub: Staff / Kitchen & Delivery Rider */}
-        <View style={styles.operationsCard}>
-          <Text style={styles.operationsTitle}>Boutique Operations & Logistics Hub</Text>
-          <View style={styles.operationsButtonsRow}>
-            <TouchableOpacity
-              style={styles.staffModeBtn}
-              activeOpacity={0.85}
-              onPress={() => router.push('/admin' as any)}>
-              <Ionicons name="restaurant-outline" size={16} color="#FFFFFF" />
-              <Text style={styles.staffModeText}>Kitchen & Counter Ops</Text>
-            </TouchableOpacity>
+        {/* Operations Hub: Staff / Kitchen & Delivery Rider - Visible ONLY to Admin or Rider */}
+        {(user?.role === 'admin' || user?.role === 'rider') && (
+          <View style={styles.operationsCard}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <Text style={styles.operationsTitle}>
+                {user.role === 'admin' ? 'Store Management Portal' : 'Fleet Partner Portal'}
+              </Text>
+              <View
+                style={{
+                  backgroundColor: user.role === 'admin' ? '#FEF3C7' : '#E0F2FE',
+                  paddingHorizontal: 8,
+                  paddingVertical: 3,
+                  borderRadius: 6,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 10,
+                    fontWeight: '800',
+                    color: user.role === 'admin' ? '#B45309' : '#0369A1',
+                  }}>
+                  {user.role === 'admin' ? 'ADMIN ACCESS' : 'RIDER ACCESS'}
+                </Text>
+              </View>
+            </View>
 
-            <TouchableOpacity
-              style={styles.riderModeBtn}
-              activeOpacity={0.85}
-              onPress={() => router.push('/rider' as any)}>
-              <Ionicons name="bicycle-outline" size={16} color="#FFFFFF" />
-              <Text style={styles.riderModeText}>Delivery Fleet Partner</Text>
-            </TouchableOpacity>
+            <View style={styles.operationsButtonsRow}>
+              {user.role === 'admin' && (
+                <TouchableOpacity
+                  style={[styles.staffModeBtn, { flex: 1 }]}
+                  activeOpacity={0.85}
+                  onPress={() => router.push('/admin' as any)}>
+                  <Ionicons name="restaurant-outline" size={16} color="#FFFFFF" />
+                  <Text style={styles.staffModeText}>Kitchen & Counter Ops</Text>
+                </TouchableOpacity>
+              )}
+
+              {user.role === 'rider' && (
+                <TouchableOpacity
+                  style={[styles.riderModeBtn, { flex: 1 }]}
+                  activeOpacity={0.85}
+                  onPress={() => router.push('/rider' as any)}>
+                  <Ionicons name="bicycle-outline" size={16} color="#FFFFFF" />
+                  <Text style={styles.riderModeText}>Delivery Fleet Partner</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
-        </View>
+        )}
 
         {/* Logout / Sign In Action */}
         {user ? (

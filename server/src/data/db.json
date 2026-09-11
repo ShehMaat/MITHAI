@@ -391,6 +391,28 @@
       "points": 450,
       "tier": "Gold Club Connoisseur",
       "createdAt": "2026-09-09T10:26:51.863Z"
+    },
+    {
+      "id": "usr-1789023620291",
+      "phone": "9811122334",
+      "name": "Pooja Sharma",
+      "points": 450,
+      "tier": "Gold Club Connoisseur",
+      "addresses": [
+        {
+          "id": "addr-1",
+          "type": "Home",
+          "name": "Pooja Sharma",
+          "phone": "9811122334",
+          "houseNo": "A-402, Nirvana Courtyard",
+          "area": "Sector 50",
+          "city": "Gurugram",
+          "state": "Haryana",
+          "pincode": "122018",
+          "isDefault": true
+        }
+      ],
+      "createdAt": "2026-09-10T07:00:20.291Z"
     }
   ],
   "bulkOrders": [

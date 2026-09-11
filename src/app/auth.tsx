@@ -19,9 +19,9 @@ export default function AuthScreen() {
   const { sendOtp, verifyOtp } = useStore();
 
   const [step, setStep] = useState<'phone' | 'otp' | 'profile'>('phone');
-  const [phone, setPhone] = useState('9876543210');
+  const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
-  const [fullName, setFullName] = useState('Gaurav Jain');
+  const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [resendTimer, setResendTimer] = useState(30);
@@ -37,7 +37,8 @@ export default function AuthScreen() {
   }, [step, resendTimer]);
 
   const handleSendOtp = async () => {
-    if (phone.replace(/[^0-9]/g, '').length < 10) {
+    const clean = phone.replace(/[^0-9]/g, '').slice(-10);
+    if (clean.length < 10) {
       setErrorMessage('Please enter a valid 10-digit mobile number');
       return;
     }
@@ -45,7 +46,7 @@ export default function AuthScreen() {
     setLoading(true);
     setErrorMessage('');
     try {
-      await sendOtp(phone);
+      await sendOtp(clean);
       setStep('otp');
       setResendTimer(30);
     } catch (err: any) {
@@ -64,10 +65,17 @@ export default function AuthScreen() {
     setLoading(true);
     setErrorMessage('');
     try {
-      const success = await verifyOtp(phone, otp, fullName);
-      if (success) {
-        // Successfully logged in! Redirect to main home dashboard
-        router.replace('/' as any);
+      const clean = phone.replace(/[^0-9]/g, '').slice(-10);
+      const verifiedUser = await verifyOtp(clean, otp, fullName);
+      if (verifiedUser) {
+        // Automatic Role-Based Routing
+        if (verifiedUser.role === 'admin') {
+          router.replace('/admin' as any);
+        } else if (verifiedUser.role === 'rider') {
+          router.replace('/rider' as any);
+        } else {
+          router.replace('/' as any);
+        }
       } else {
         setErrorMessage('Invalid OTP code. Try demo code 4920.');
       }
@@ -126,7 +134,7 @@ export default function AuthScreen() {
               </View>
               <TextInput
                 style={styles.phoneInput}
-                placeholder="98765 43210"
+                placeholder="Enter 10-digit number"
                 placeholderTextColor={Colors.light.outline}
                 keyboardType="number-pad"
                 maxLength={10}
@@ -136,6 +144,54 @@ export default function AuthScreen() {
                   setErrorMessage('');
                 }}
               />
+            </View>
+
+            {/* Quick Testing Presets */}
+            <View style={styles.rolePresetsContainer}>
+              <Text style={styles.rolePresetsLabel}>ROLE ACCESS PRESETS</Text>
+              <View style={styles.roleChipsRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.roleChip,
+                    phone === '6262750616' && styles.roleChipActive,
+                  ]}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    setPhone('6262750616');
+                    setFullName('Store Manager (Admin)');
+                    setErrorMessage('');
+                  }}>
+                  <Text style={styles.roleChipText}>👑 Admin (6262750616)</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.roleChip,
+                    phone === '9993393853' && styles.roleChipActive,
+                  ]}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    setPhone('9993393853');
+                    setFullName('Delivery Partner');
+                    setErrorMessage('');
+                  }}>
+                  <Text style={styles.roleChipText}>🛵 Rider (9993393853)</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.roleChip,
+                    phone === '9876543210' && styles.roleChipActive,
+                  ]}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    setPhone('9876543210');
+                    setFullName('Gaurav Jain');
+                    setErrorMessage('');
+                  }}>
+                  <Text style={styles.roleChipText}>🛍️ Customer</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
@@ -165,12 +221,42 @@ export default function AuthScreen() {
         ) : (
           /* Step 2: 4-Digit OTP Code */
           <View style={styles.formContainer}>
-            <View style={styles.demoOtpNotice}>
-              <Ionicons name="information-circle" size={16} color={Colors.light.primary} />
+            {/* Dynamic Role Destination Badge */}
+            {phone.replace(/[^0-9]/g, '').slice(-10) === '6262750616' ? (
+              <View style={[styles.roleDestinationBanner, { backgroundColor: '#FEF3C7', borderColor: '#F59E0B' }]}>
+                <Ionicons name="shield-checkmark" size={16} color="#D97706" />
+                <Text style={[styles.roleDestinationText, { color: '#92400E' }]}>
+                  ADMIN ACCOUNT • Auto-routes to Kitchen & Store Dashboard (/admin)
+                </Text>
+              </View>
+            ) : phone.replace(/[^0-9]/g, '').slice(-10) === '9993393853' ? (
+              <View style={[styles.roleDestinationBanner, { backgroundColor: '#E0F2FE', borderColor: '#38BDF8' }]}>
+                <Ionicons name="bicycle" size={16} color="#0284C7" />
+                <Text style={[styles.roleDestinationText, { color: '#0369A1' }]}>
+                  FLEET PARTNER • Auto-routes to Delivery Partner Portal (/rider)
+                </Text>
+              </View>
+            ) : (
+              <View style={[styles.roleDestinationBanner, { backgroundColor: '#ECFDF5', borderColor: '#34D399' }]}>
+                <Ionicons name="sparkles" size={16} color="#059669" />
+                <Text style={[styles.roleDestinationText, { color: '#065F46' }]}>
+                  CUSTOMER ACCOUNT • Auto-routes to Artisanal Mithai Catalog (/)
+                </Text>
+              </View>
+            )}
+
+            <TouchableOpacity
+              style={styles.demoOtpNotice}
+              activeOpacity={0.7}
+              onPress={() => {
+                setOtp('4920');
+                setErrorMessage('');
+              }}>
+              <Ionicons name="sparkles" size={16} color={Colors.light.primary} />
               <Text style={styles.demoOtpNoticeText}>
-                Demo OTP Code: <Text style={{ fontWeight: '900' }}>4920</Text>
+                Demo Master OTP: <Text style={{ fontWeight: '900' }}>4920</Text> (Tap to Auto-fill)
               </Text>
-            </View>
+            </TouchableOpacity>
 
             <Text style={styles.inputLabel}>Enter 4-Digit Verification Code</Text>
             <TextInput
@@ -187,7 +273,7 @@ export default function AuthScreen() {
               autoFocus
             />
 
-            <Text style={styles.inputLabel}>Your Full Name (For Delivery & Rewards)</Text>
+            <Text style={styles.inputLabel}>Your Name (Optional)</Text>
             <TextInput
               style={styles.nameInput}
               placeholder="e.g. Gaurav Jain"
@@ -431,5 +517,53 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '800',
     color: Colors.light.primary,
+  },
+  rolePresetsContainer: {
+    marginTop: 10,
+    marginBottom: 6,
+  },
+  rolePresetsLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: Colors.light.textSecondary,
+    letterSpacing: 0.8,
+    marginBottom: 6,
+  },
+  roleChipsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  roleChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: '#F3EDE4',
+    borderWidth: 1,
+    borderColor: '#E7DFD4',
+  },
+  roleChipActive: {
+    backgroundColor: '#FFF0E5',
+    borderColor: Colors.light.primary,
+  },
+  roleChipText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: Colors.light.text,
+  },
+  roleDestinationBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+  },
+  roleDestinationText: {
+    flex: 1,
+    fontSize: 11,
+    fontWeight: '700',
+    lineHeight: 15,
   },
 });

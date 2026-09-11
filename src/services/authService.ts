@@ -4,6 +4,7 @@ export interface UserSession {
   id: string;
   name: string;
   phone: string;
+  role: 'customer' | 'admin' | 'rider';
   points: number;
   tier: string;
   createdAt: string;
@@ -29,17 +30,33 @@ export class AuthService {
     return apiClient.post<{ user: UserSession; token: string }>(
       '/auth/verify-otp',
       { phone, otp, name },
-      async () => ({
-        user: {
-          id: 'usr-98765',
-          name: name || 'Gaurav Jain',
-          phone,
-          points: 450,
-          tier: 'Gold Club Connoisseur',
-          createdAt: new Date().toISOString(),
-        },
-        token: `mock_token_${Date.now()}`,
-      })
+      async () => {
+        const clean = phone.replace(/[^0-9]/g, '').slice(-10);
+        let role: 'customer' | 'admin' | 'rider' = 'customer';
+        let defaultName = name;
+        if (clean === '6262750616') {
+          role = 'admin';
+          defaultName = defaultName || 'Store Manager (Admin)';
+        } else if (clean === '9993393853') {
+          role = 'rider';
+          defaultName = defaultName || 'Delivery Fleet Partner';
+        } else {
+          defaultName = defaultName || 'Mithai Connoisseur';
+        }
+
+        return {
+          user: {
+            id: `usr-${clean}`,
+            name: defaultName,
+            phone: clean,
+            role,
+            points: 450,
+            tier: role === 'admin' ? 'Store Administrator' : role === 'rider' ? 'Fleet Partner' : 'Gold Club Connoisseur',
+            createdAt: new Date().toISOString(),
+          },
+          token: `mock_token_${Date.now()}`,
+        };
+      }
     );
   }
 }

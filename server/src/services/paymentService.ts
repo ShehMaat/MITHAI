@@ -97,6 +97,7 @@ export class PaymentService {
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
     if (!keySecret) {
       // In simulation mode, accept simulated payment IDs
+      if (typeof params.razorpay_payment_id !== 'string') return false;
       return params.razorpay_payment_id.startsWith('pay_') || params.razorpay_payment_id.startsWith('sim_');
     }
 

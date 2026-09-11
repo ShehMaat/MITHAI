@@ -43,31 +43,69 @@ export class SmsService {
 
     // 1. Fast2SMS Provider (Very popular in India, simple REST API)
     const fast2smsApiKey = process.env.FAST2SMS_API_KEY;
+    const fast2smsOtpId = process.env.FAST2SMS_OTP_ID;
+
     if (fast2smsApiKey) {
       try {
-        const res = await fetch('https://www.fast2sms.com/dev/bulkV2', {
-          method: 'POST',
-          headers: {
-            authorization: fast2smsApiKey,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            route: 'otp',
-            variables_values: otp,
-            numbers: cleanPhone.slice(-10),
-          }),
-        });
-        const data = await res.json() as any;
-        if (data.return) {
-          console.log(`[SmsService] Fast2SMS OTP successfully dispatched to +91 ${cleanPhone}`);
-          return {
-            success: true,
-            message: `OTP sent to +91 ${cleanPhone.slice(-10)}`,
-            provider: 'fast2sms',
-          };
+        const targetMobile = cleanPhone.slice(-10);
+
+        // If user configured a specific Fast2SMS OTP Template ID:
+        if (fast2smsOtpId) {
+          const res = await fetch('https://www.fast2sms.com/dev/otp/send', {
+            method: 'POST',
+            headers: {
+              Authorization: fast2smsApiKey,
+              accept: 'application/json',
+              'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+              mobile: targetMobile,
+              otp_id: fast2smsOtpId,
+              otp: otp,
+              otp_expiry: 5,
+              otp_length: 4,
+              variables_values: otp,
+            }),
+          });
+          const data = await res.json() as any;
+          if (data.status_code === 200 || data.return) {
+            console.log(`[SmsService] Fast2SMS OTP Template sent to +91 ${targetMobile}`);
+            return {
+              success: true,
+              message: `OTP sent via Fast2SMS to +91 ${targetMobile}`,
+              provider: 'fast2sms',
+            };
+          } else {
+            console.warn('[SmsService] Fast2SMS OTP template response:', data);
+          }
+        } else {
+          // Fallback to Fast2SMS Quick OTP Route (no template ID needed)
+          const res = await fetch('https://www.fast2sms.com/dev/bulkV2', {
+            method: 'POST',
+            headers: {
+              authorization: fast2smsApiKey,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              route: 'otp',
+              variables_values: otp,
+              numbers: targetMobile,
+            }),
+          });
+          const data = await res.json() as any;
+          if (data.return) {
+            console.log(`[SmsService] Fast2SMS Quick OTP successfully sent to +91 ${targetMobile}`);
+            return {
+              success: true,
+              message: `OTP sent to +91 ${targetMobile}`,
+              provider: 'fast2sms',
+            };
+          } else {
+            console.warn('[SmsService] Fast2SMS bulkV2 response:', data);
+          }
         }
       } catch (err: any) {
-        console.error('[SmsService] Fast2SMS send failed, falling back:', err.message);
+        console.error('[SmsService] Fast2SMS send error, falling back to simulation:', err.message);
       }
     }
 

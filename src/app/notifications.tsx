@@ -179,7 +179,7 @@ export default function NotificationsScreen() {
             </View>
             <Text style={styles.emptyTitle}>No Notifications Here</Text>
             <Text style={styles.emptySub}>
-              You're completely caught up with fresh batches, royal offers, and order statuses.
+              You&apos;re completely caught up with fresh batches, royal offers, and order statuses.
             </Text>
           </View>
         ) : (
