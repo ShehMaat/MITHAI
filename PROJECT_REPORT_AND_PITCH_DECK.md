@@ -6,8 +6,8 @@
 **Document Version:** 1.0.0 (Production Release)  
 **Date:** September 2026  
 **Platform Status:** Fully Engineered, Tested on Physical Android 15 Hardware, Compiled to Standalone Production APK  
-**Direct Download Artifact:** [Download Standalone Android APK (v1.0.0)](https://expo.dev/artifacts/eas/tycn9Z-_eEGj7ktnOC5Ed6vJJLLUUupIhyy-aD18L8I.apk)  
-**EAS Cloud Build Verification ID:** `83bafe1f-5148-4d1d-9546-a747664bffef`  
+**Direct Download Artifact:** [Download Standalone Android APK (v1.0.0)](https://expo.dev/artifacts/eas/y5Cfdy9h2u2zI75nFev09ZS5oR6pANxsrq1L-r3BJiQ.apk)  
+**EAS Cloud Build Verification ID:** `6e914d68-8484-406b-bc06-28c6973cb708`  
 
 ---
 
@@ -267,18 +267,18 @@ flowchart TD
 
 | Parameter | EAS Production Build Record |
 | :--- | :--- |
-| **Build ID** | `83bafe1f-5148-4d1d-9546-a747664bffef` |
+| **Build ID** | `6e914d68-8484-406b-bc06-28c6973cb708` |
 | **EAS Account** | `shehmaat` |
 | **Project Slug** | `GauravBhaikimithai` |
 | **Target Platform** | Android (`.apk` Standalone Binary) |
 | **Profile** | `preview` (distribution: internal) |
 | **Package Identifier** | `com.gauravbhaikimithai.app` |
 | **SDK & Runtime** | Expo SDK 57.0.0 (Runtime: 1.0.0) |
-| **Git Commit** | `449051e2b148956b9e084ec4ab38e9b4c70d44db` |
+| **Git Commit** | `79e50601f345309806fc4f8603b9d0898c766dd6` |
 | **Build Status** | **FINISHED (Success)** |
-| **Total Build Time** | 15 minutes 12 seconds |
-| **Direct APK Download** | [Download APK](https://expo.dev/artifacts/eas/tycn9Z-_eEGj7ktnOC5Ed6vJJLLUUupIhyy-aD18L8I.apk) |
-| **Public Build Dashboard** | [Expo Dashboard Link](https://expo.dev/accounts/shehmaat/projects/GauravBhaikimithai/builds/83bafe1f-5148-4d1d-9546-a747664bffef) |
+| **Total Build Time** | 14 minutes 18 seconds |
+| **Direct APK Download** | [Download APK](https://expo.dev/artifacts/eas/y5Cfdy9h2u2zI75nFev09ZS5oR6pANxsrq1L-r3BJiQ.apk) |
+| **Public Build Dashboard** | [Expo Dashboard Link](https://expo.dev/accounts/shehmaat/projects/GauravBhaikimithai/builds/6e914d68-8484-406b-bc06-28c6973cb708) |
 
 ---
 
@@ -380,8 +380,8 @@ FINAL TEST RESULT: 46 PASSED / 0 FAILED / 0 REGRESSIONS (100% PASS RATE)
 
 ### Production Artifacts Summary
 
-* **Compiled Binary:** `GauravBhaikimithai-v1.0.0.apk`
-* **Direct Cloud URL:** `https://expo.dev/artifacts/eas/tycn9Z-_eEGj7ktnOC5Ed6vJJLLUUupIhyy-aD18L8I.apk`
+* **Compiled Binary:** `GauravDairy-v1.0.0.apk`
+* **Direct Cloud URL:** `https://expo.dev/artifacts/eas/y5Cfdy9h2u2zI75nFev09ZS5oR6pANxsrq1L-r3BJiQ.apk`
 * **OTA Update Channel:** `preview` (compatible with runtime `1.0.0`)
 * **Backend API Base:** `http://localhost:5000/api/v1` (or local Wi-Fi IP for mobile testing)
 * **WebSocket Engine:** `ws://localhost:5000`
